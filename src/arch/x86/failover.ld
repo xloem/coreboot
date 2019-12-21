@@ -50,8 +50,10 @@ SECTIONS
 		(CONFIG(SIPI_VECTOR_IN_ROM) ? 4096 : 0);
 
 	/* Post-check proper SIPI vector. */
-	_bogus = ASSERT(!CONFIG(SIPI_VECTOR_IN_ROM) || (ap_sipi_vector_in_rom == 0xff),
+#if CONFIG(SIPI_VECTOR_IN_ROM)
+	_bogus = ASSERT(ap_sipi_vector_in_rom == 0xff,
 		"Address mismatch on AP_SIPI_VECTOR");
+#endif
 
 	/DISCARD/ : {
 		*(.comment)
