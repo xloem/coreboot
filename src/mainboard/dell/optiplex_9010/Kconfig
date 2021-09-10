@@ -48,6 +48,9 @@ config CBFS_SIZE
 	hex
 	default 0x600000
 
+config PXE_ROM_ID
+	default "8086,1502"
+
 config INCLUDE_SMSC_SCH5545_EC_FW
 	bool "Include SMSC SCH5545 EC firmware binary"
 	default n
