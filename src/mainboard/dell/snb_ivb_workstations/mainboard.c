@@ -9,7 +9,7 @@
 #include <southbridge/intel/common/gpio.h>
 #include <superio/smsc/sch5545/sch5545.h>
 
-#include "sch5545_ec.h"
+#include <baseboard/sch5545_ec.h>
 
 #define SIO_PORT				0x2e
 
@@ -61,7 +61,7 @@ static void mainboard_enable(struct device *dev)
 	pin_sts |= get_gpio(GPIO_CHASSIS_ID2) << 2;
 	pin_sts |= get_gpio(GPIO_FRONT_PANEL_CHASSIS_DET_L) << 3;
 
-	printk(BIOS_DEBUG, "Chassis type:");
+	printk(BIOS_DEBUG, "Chassis type: ");
 	switch (pin_sts) {
 	case 0:
 		printk(BIOS_DEBUG, "MT\n");
