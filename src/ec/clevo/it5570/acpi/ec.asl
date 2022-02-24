@@ -195,6 +195,18 @@ Device (EC0)
 		}
 	}
 
+	Method (FLXE, 1, Serialized) // FlexiCharger Enable
+	{
+		FBF1 = Arg0 << 1
+		FCMD = 0xCB
+	}
+
+	Method (FLXS, 2, Serialized) // FlexiCharger Set Levels
+	{
+		FBUF = Arg0
+		FDAT = Arg1
+	}
+
 	Method (_Q0A, 0, NotSerialized) // Touchpad Toggle
 	{
 		Debug = "EC: Touchpad Toggle"
