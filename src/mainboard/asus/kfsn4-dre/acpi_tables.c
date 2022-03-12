@@ -1,31 +1,10 @@
-/*
- * This file is part of the coreboot project.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * ACPI support
- * written by Stefan Reinauer <stepan@openbios.org>
- *  (C) 2005 Stefan Reinauer
- *
- *  Copyright 2005 AMD
- *  2005.9 yhlu modify that to more dynamic for AMD Opteron Based MB
- *
- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
- */
+/* SPDX-License-Identifier: GPL-2.0-or-later */
 
 #include <assert.h>
-#include <arch/acpi.h>
+#include <acpi/acpi.h>
 #include <device/pci_ops.h>
 #include <arch/smp/mpspec.h>
-#include <device/pci.h>
-#include <cpu/amd/amdfam10_sysconf.h>
+#include <device/pci_ops.h>
 
 /* APIC */
 unsigned long acpi_fill_madt(unsigned long current)
