@@ -20,7 +20,7 @@ config BOARD_SPECIFIC_OPTIONS
 
 config MAINBOARD_DIR
 	string
-	default asus/kfsn4-dre
+	default "asus/kfsn4-dre"
 
 config APIC_ID_OFFSET
 	hex
