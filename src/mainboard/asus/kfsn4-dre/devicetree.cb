@@ -11,6 +11,11 @@ chip northbridge/amd/amdfam10/root_complex	# Root complex
 			device pci 18.0 on end		# Link 0 == LDT 0
 			device pci 18.0 on		# Link 1 == LDT 1 [SB on link 1]
 				chip southbridge/nvidia/ck804		# Southbridge
+					register "ide0_enable" = "1"
+					register "ide1_enable" = "1"
+					register "sata0_enable" = "1"
+					register "sata1_enable" = "1"
+
 					device pci 0.0 on end			# HT
 					device pci 1.0 on			# LPC
 						chip superio/winbond/w83627thg	# Super I/O
@@ -77,6 +82,7 @@ chip northbridge/amd/amdfam10/root_complex	# Root complex
 							device i2c 57 on end
 						end
 						chip drivers/i2c/w83793
+							register "server_manual_mode" = "0"		# Spin up fans to full speed for server or auto mode for workstation
 							register "mfc" = "0x29"				# Enable FANIN1/FANIN12, FANIN9/FANIN10, and FANIN8/FANCTRL8 inputs
 							register "fanin" = "0x7f"			# Enable monitoring of FANIN6 - FANIN12
 							register "fanin_sel" = "0x0f"			# Connect FANIN9 - FANIN12 to pins 37 - 40
@@ -117,7 +123,7 @@ chip northbridge/amd/amdfam10/root_complex	# Root complex
 							register "fan6_nonstop" = "7"			# Set Fan 6 minimum speed
 							register "fan7_nonstop" = "7"			# Set Fan 7 minimum speed
 							register "fan8_nonstop" = "7"			# Set Fan 8 minimum speed
-							register "default_speed" = "100"		# All fans to full speed on power up
+							register "default_speed" = "40"			# 40% duty cycle
 							register "fan1_duty" = "100"			# Fan 1 to full speed
 							register "fan2_duty" = "100"			# Fan 2 to full speed
 							register "fan3_duty" = "100"			# Fan 3 to full speed
@@ -174,10 +180,6 @@ chip northbridge/amd/amdfam10/root_complex	# Root complex
 						# Slot				# PCI E 0
 					end
 					device pci f.0 off end
-					register "ide0_enable" = "1"
-					register "ide1_enable" = "1"
-					register "sata0_enable" = "1"
-					register "sata1_enable" = "1"
 				end
 			end
 			device pci 18.1 on end
