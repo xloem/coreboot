@@ -9,7 +9,7 @@
  *         sio_setup();
  *         // serial code might go in here, happens after sio_setup. should probably find a manual on these funcs
  *         // console_init() ?
- * - mainboard_romstage_entry:
+ * - [X] mainboard_romstage_entry:
  *         sb7xx_51xx_decode_last_reset -> power_on_reset call should be define'd out, probably based on some power-related flag
  * - mainboard_after_raminit:
  *         instead of switch_spd_mux(0x1), we do

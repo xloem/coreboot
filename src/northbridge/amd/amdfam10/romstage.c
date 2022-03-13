@@ -70,8 +70,9 @@ void mainboard_romstage_entry(void)
 	/* Setup sysinfo defaults */
 	set_sysinfo_in_ram(0);
 
-	if (!sb7xx_51xx_decode_last_reset())
-		power_on_reset = 1;
+	if (CONFIG(SOUTHBRIDGE_AMD_SB700))
+		if (!sb7xx_51xx_decode_last_reset())
+			power_on_reset = 1;
 
 	setup_bsp(&sysinfo, power_on_reset);
 	post_code(0x38);
