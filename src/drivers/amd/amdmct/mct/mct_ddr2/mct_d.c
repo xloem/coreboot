@@ -304,6 +304,9 @@ fatalexit:
 	die("mct_d: fatalexit");
 }
 
+void initialize_mca(uint8_t bsp, uint8_t suppress errors) {
+	printk(BIOS_WARNING, "WARNING: initialize_mca workaround stub");
+}
 
 static u8 ReconfigureDIMMspare_D(struct MCTStatStruc *pMCTstat,
 					struct DCTStatStruc *pDCTstatA)

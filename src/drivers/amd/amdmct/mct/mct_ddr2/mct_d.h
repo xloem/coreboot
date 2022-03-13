@@ -719,6 +719,7 @@ u32 SetupDqsPattern_1PassA(u8 Pass);
 u32 SetupDqsPattern_1PassB(u8 Pass);
 u8 mct_Get_Start_RcvrEnDly_1Pass(u8 Pass);
 u8 mct_Average_RcvrEnDly_Pass(struct DCTStatStruc *pDCTstat, u8 RcvrEnDly, u8 RcvrEnDlyLimit, u8 Channel, u8 Receiver, u8 Pass);
+void initialize_mca(uint8_t bsp, uint8_t suppress_errors);
 void CPUMemTyping_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA);
 void UMAMemTyping_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA);
 u8 ECCInit_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA);
