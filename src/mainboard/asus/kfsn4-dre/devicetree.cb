@@ -57,30 +57,6 @@ chip northbridge/amd/amdfam10/root_complex	# Root complex
 						end
 					end
 					device pci 1.1 on			# SM 0
-						chip drivers/generic/generic	# DIMM n-0-0-0
-							device i2c 50 on end
-						end
-						chip drivers/generic/generic	# DIMM n-0-0-1
-							device i2c 51 on end
-						end
-						chip drivers/generic/generic	# DIMM n-0-1-0
-							device i2c 52 on end
-						end
-						chip drivers/generic/generic	# DIMM n-0-1-1
-							device i2c 53 on end
-						end
-						chip drivers/generic/generic	# DIMM n-1-0-0
-							device i2c 54 on end
-						end
-						chip drivers/generic/generic	# DIMM n-1-0-1
-							device i2c 55 on end
-						end
-						chip drivers/generic/generic	# DIMM n-1-1-0
-							device i2c 56 on end
-						end
-						chip drivers/generic/generic	# DIMM n-1-1-1
-							device i2c 57 on end
-						end
 						chip drivers/i2c/w83793
 							register "server_manual_mode" = "0"		# Spin up fans to full speed for server or auto mode for workstation
 							register "mfc" = "0x29"				# Enable FANIN1/FANIN12, FANIN9/FANIN10, and FANIN8/FANCTRL8 inputs
