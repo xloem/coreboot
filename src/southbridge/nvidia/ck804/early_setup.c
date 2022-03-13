@@ -8,7 +8,7 @@ static const unsigned int ctrl_conf_enable_msi_mapping[] = {
 	RES_PCI_IO, PCI_ADDR(0, 0, 0, 0xe0), ~(0x00000000), 0x00010000,	/* Enable MSI mapping on host bridge -- without this Linux cannot use the network device MSI interrupts! */
 };
 
-static void ck804_control(const unsigned int *values, u32 size,
+void ck804_control(const unsigned int *values, u32 size,
 			  uint8_t bus_unit_id)
 {
 	unsigned int busn[4], io_base[4];
@@ -41,6 +41,20 @@ static void ck804_control(const unsigned int *values, u32 size,
 		PCI_DEV(0, bus_unit_id, 0), io_base[0]);
 
 	ck804_early_clear_port(ck804_num, busn, io_base);
+}
+
+/**
+ * @brief Get SouthBridge device number
+ * @param[in] bus target bus number
+ * @return southbridge device number
+ */
+unsigned int get_sbdn(unsigned int bus)
+{
+	pci_devfn_t dev;
+
+	dev = pci_locate_device_on_bus(PCI_ID(PCI_VENDOR_ID_NVIDIA,
+					PCI_DEVICE_ID_NVIDIA_CK804_PRO), bus);
+	return (dev >> 15) & 0x1f;
 }
 
 void southbridge_early_setup(void)

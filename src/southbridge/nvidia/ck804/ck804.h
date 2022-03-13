@@ -22,4 +22,7 @@
 
 void enable_fid_change_on_sb(unsigned int sbbusn, unsigned int sbdn);
 
+void ck804_control(const unsigned int *values, u32 size,
+			  uint8_t bus_unit_id);
+
 #endif
