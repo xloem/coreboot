@@ -5,8 +5,8 @@ the bulk of the changes are splitting cache_as_ram into multiple public function
 and removing the spinlocks.
 
 - [x] license is changed
-- [ ] includes are changed
-- [ ] DIMM defines are embedded
+- [x] includes are changed
+- [x] DIMM defines are embedded
 - [ ] spd_read_byte is removed
 - [ ] spd_addr structures are moved down in file
 - [ ] ht_speed_limit setting is moved into a special purpose function, mainboard_sysinfo_hook
@@ -24,32 +24,27 @@ and removing the spinlocks.
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
 #include <stdint.h>
-#include <device/pci_def.h>
 #include <device/pci_ids.h>
 #include <device/pnp_ops.h>
-#include <device/pci_ops.h>
-#include <arch/cpu.h>
-#include <cpu/x86/lapic.h>
+#include <arch/mmio.h>
 #include <console/console.h>
-#include <timestamp.h>
-#include <spd.h>
-#include <cbmem.h>
-#include <cpu/amd/model_10xxx_rev.h>
-#include <cpu/amd/car.h>
-#include <cpu/amd/msr.h>
-#include <southbridge/amd/common/reset.h>
+#include <cpu/amd/common/common.h>
 #include <southbridge/nvidia/ck804/early_smbus.h>
-#include <delay.h>
-#include <superio/winbond/common/winbond.h>
-#include <superio/winbond/w83627thg/w83627thg.h>
-#include <cpu/x86/bist.h>
-#include <northbridge/amd/amdht/ht_wrapper.h>
+#include <northbridge/amd/amdfam10/amdfam10.h>
 #include <northbridge/amd/amdfam10/raminit.h>
-#include <cpu/amd/family_10h-family_15h/init_cpus.h>
 
-#include "cpu/amd/quadcore/quadcore.c"
+#include <delay.h>
+#include <option.h>
 
-#define SERIAL_DEV PNP_DEV(0x2e, W83627THG_SP1)
+/* DIMM SPD addresses */
+#define DIMM0	0x50
+#define DIMM1	0x51
+#define DIMM2	0x52
+#define DIMM3	0x53
+#define DIMM4	0x54
+#define DIMM5	0x55
+#define DIMM6	0x56
+#define DIMM7	0x57
 
 #define CK804_MB_SETUP \
 	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+33, ~(0x0f),(0x04 | 0x01),	/* -ENOINFO Proprietary BIOS sets this register; "When in Rome..."*/
