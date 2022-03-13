@@ -304,7 +304,7 @@ fatalexit:
 	die("mct_d: fatalexit");
 }
 
-void initialize_mca(uint8_t bsp, uint8_t suppress errors) {
+void initialize_mca(uint8_t bsp, uint8_t suppress_errors) {
 	printk(BIOS_WARNING, "WARNING: initialize_mca workaround stub");
 }
 
