@@ -3562,7 +3562,7 @@ static u8 CheckNBCOFEarlyArbEn(struct MCTStatStruc *pMCTstat,
 	reg = 0x94;
 	val = Get_NB32(dev, reg);
 	if (!(val & (1 << MemClkFreqVal)))
-		val = Get_NB32(dev, reg * 0x100);	/* get the DCT1 value */
+		val = Get_NB32(dev, reg + 0x100);	/* get the DCT1 value */
 
 	val &= 0x07;
 	val += 3;
