@@ -17,18 +17,18 @@
  *         ^------- look at first, where this is could bidirectionally inform ck804 scopes
  *         	spd seems to have to do with dram timing, so maybe i'll leave it where it is, which means
  *         	exposing something from ck804, likely ck804_control itself.
- * - southbridge_early_setup:
+ * - [X] southbridge_early_setup:
  *         - no call to sb5650 and sb7xx early setups
  *         - ck804_control(ctrl_conf_fix_pci_numbering, ARRAY_SIZE(ctrl_conf_fix_pci_numbering), CK804_BOARD_BOOT_BASE_UNIT_UID);
  *                 was between southbridge_early_setup and post_code(0x38) preceding soutbridge_ht_init()
- * - southbridge_ht_init():
+ * - [X] southbridge_ht_init():
  *         - wants_reset = ck804_early_setup_x
  *                 maybe goes in southbridge_early_setup though unsure
  *           if (wants_reset) {
  *             printk(BIOS_DEBUG, "ck804_early_setup_x wanted additional reset!");
  *           }
  *         - same code as kgpe-d16 if (!warm_reset_detct(0)) ... printk ... soft_reset .. die
- * - mainboard_spd_info?: (presently between post_code 0x3D and 0x40, so actually after mainboard_spd_info, e.g. raminit_amdmct or mainboard_after_raminit)
+ * - [X] mainboard_spd_info?: (presently between post_code 0x3D and 0x40, so actually after mainboard_spd_info, e.g. raminit_amdmct or mainboard_after_raminit)
  *         printk(BIOS_DEBUG, "enable_smbus()\n");
  *         enable_smbus();
  * - [Xish] southbridge_before_pci_init:
@@ -95,51 +95,6 @@ static const unsigned int ctrl_conf_disable_spd[] = {
 	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+42, ~(0x0f),(0x04 | 0x01),/* W2,GPIO43, U6 input S0*/
 	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+43, ~(0x0f),(0x04 | 0x00),/* W3,GPIO44, U6 input S1*/
 };
-
-#if 0
-static const unsigned int ctrl_conf_fix_pci_numbering[] = {
-	RES_PCI_IO, PCI_ADDR(0, 0, 0, 0x44), ~(0x00010000), 0x00000000,	/* Force CK804 to start its internal device numbering (Base Unit ID) at 0 instead of the power-on default of 1 */
-};
-
-static const unsigned int ctrl_conf_enable_msi_mapping[] = {
-	RES_PCI_IO, PCI_ADDR(0, 0, 0, 0xe0), ~(0x00000000), 0x00010000,	/* Enable MSI mapping on host bridge -- without this Linux cannot use the network device MSI interrupts! */
-};
-#endif
-
-static void ck804_control(const unsigned int *values, u32 size,
-			  uint8_t bus_unit_id)
-{
-	unsigned int busn[4], io_base[4];
-	int i, ck804_num = 0;
-
-	for (i = 0; i < 4; i++) {
-		u32 id;
-		pci_devfn_t dev;
-		if (i == 0) /* SB chain */
-			dev = PCI_DEV(i * 0x40, bus_unit_id, 0);
-		else
-			dev = 0;
-		id = pci_read_config32(dev, PCI_VENDOR_ID);
-		if (id == 0x005e10de) {
-			busn[ck804_num] = i * 0x40;
-			io_base[ck804_num] = i * 0x4000;
-			ck804_num++;
-		}
-	}
-
-	if (ck804_num < 1) {
-		printk(BIOS_WARNING, "CK804 not found at device base unit id %02x!\n", bus_unit_id);
-		return;
-	}
-
-	ck804_early_set_port(ck804_num, busn, io_base);
-
-	setup_resource_map_x_offset(values,
-		size,
-		PCI_DEV(0, bus_unit_id, 0), io_base[0]);
-
-	ck804_early_clear_port(ck804_num, busn, io_base);
-}
 
 void activate_spd_rom(const struct mem_controller *ctrl)
 {
