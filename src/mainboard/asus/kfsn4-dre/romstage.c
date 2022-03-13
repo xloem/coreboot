@@ -1,5 +1,41 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
+/*
+ * work on migrating these parts to the various modularised functions, based on what was done in kgpe-d16:
+ *
+ * if we find new unmapped functions we can likely look at what subsystem they engage to put them in an appropriate place.
+ * 
+ * - bootblock_early_southbridge_init:
+ *         sio_setup();
+ *         // serial code might go in here, happens after sio_setup. should probably find a manual on these funcs
+ *         // console_init() ?
+ * - mainboard_romstage_entry:
+ *         sb7xx_51xx_decode_last_reset -> power_on_reset call should be define'd out, probably based on some power-related flag
+ * - mainboard_after_raminit:
+ *         instead of switch_spd_mux(0x1), we do
+ *         ck804_control(ctrl_conf_disable_spd, ARRAY_SIZE(ctrl_conf_disable_spb), CK804_DEVN_BASE);
+ *         ^------- look at first, where this is could bidirectionally inform ck804 scopes
+ * - southbridge_early_setup:
+ *         - no call to sb5650 and sb7xx early setups
+ *         - ck804_control(ctrl_conf_fix_pci_numbering, ARRAY_SIZE(ctrl_conf_fix_pci_numbering), CK804_BOARD_BOOT_BASE_UNIT_UID);
+ *                 was between southbridge_early_setup and post_code(0x38) preceding soutbridge_ht_init()
+ * - southbridge_ht_init():
+ *         - wants_reset = ck804_early_setup_x
+ *                 maybe goes in southbridge_early_setup though unsure
+ *           if (wants_reset) {
+ *             printk(BIOS_DEBUG, "ck804_early_setup_x wanted additional reset!");
+ *           }
+ *         - same code as kgpe-d16 if (!warm_reset_detct(0)) ... printk ... soft_reset .. die
+ * - mainboard_spd_info?: (presently between post_code 0x3D and 0x40, so actually after mainboard_spd_info, e.g. raminit_amdmct or mainboard_after_raminit)
+ *         printk(BIOS_DEBUG, "enable_smbus()\n");
+ *         enable_smbus();
+ * - [Xish] southbridge_before_pci_init:
+ *         - printk(BIOS_DEBUG, "enable_msi_mapping()\n");
+ *         - ck804_control(ctrl_conf_enable_msi_mapping, ARRAY_SIZE(ctrl_conf_enable_msi_mapping), CK804_DEVN_BASE);
+ * - [X] mainboard_early_init: should be some pnp_writes here
+ *
+ */
+
 #include <stdint.h>
 #include <device/pci_ids.h>
 #include <device/pnp_ops.h>
