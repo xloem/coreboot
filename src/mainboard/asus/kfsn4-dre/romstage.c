@@ -23,12 +23,6 @@
 #define DIMM6	0x56
 #define DIMM7	0x57
 
-#define CK804_MB_SETUP \
-	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+33, ~(0x0f),(0x04 | 0x01),	/* -ENOINFO Proprietary BIOS sets this register; "When in Rome..."*/
-
-#include <southbridge/nvidia/ck804/early_setup_ss.h>
-#include "southbridge/nvidia/ck804/early_setup_car.c"
-
 #define GPIO3_DEV PNP_DEV(0x2e, W83627THG_GPIO3)
 
 /**

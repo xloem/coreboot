@@ -1,0 +1,8 @@
+
+/* code from kfsn4-dre/romstage.c . there may be more back there. */
+
+#define CK804_MB_SETUP \
+	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+33, ~(0x0f),(0x04 | 0x01),	/* -ENOINFO Proprietary BIOS sets this register; "When in Rome..."*/
+
+#include <southbridge/nvidia/ck804/early_setup_ss.h>
+#include "southbridge/nvidia/ck804/early_setup_car.c"
