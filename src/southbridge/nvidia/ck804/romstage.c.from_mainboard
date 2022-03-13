@@ -20,3 +20,20 @@ unsigned int get_sbdn(unsigned int bus)
 					PCI_DEVICE_ID_NVIDIA_CK804_PRO), bus);
 	return (dev >> 15) & 0x1f;
 }
+
+static void sio_setup(void)
+{
+	u32 dword;
+	u8 byte;
+
+	/* Subject decoding */
+	byte = pci_read_config8(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0x7b);
+	byte |= 0x20;
+	pci_write_config8(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0x7b, byte);
+
+	/* LPC Positive Decode 0 */
+	dword = pci_read_config32(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0xa0);
+	/* Serial 0, Serial 1 */
+	dword |= (1 << 0) | (1 << 1);
+	pci_write_config32(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0xa0, dword);
+}

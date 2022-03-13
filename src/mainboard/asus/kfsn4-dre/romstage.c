@@ -60,6 +60,7 @@ static const unsigned int ctrl_conf_disable_spd[] = {
 	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+43, ~(0x0f),(0x04 | 0x00),/* W3,GPIO44, U6 input S1*/
 };
 
+#if 0
 static const unsigned int ctrl_conf_fix_pci_numbering[] = {
 	RES_PCI_IO, PCI_ADDR(0, 0, 0, 0x44), ~(0x00010000), 0x00000000,	/* Force CK804 to start its internal device numbering (Base Unit ID) at 0 instead of the power-on default of 1 */
 };
@@ -67,6 +68,7 @@ static const unsigned int ctrl_conf_fix_pci_numbering[] = {
 static const unsigned int ctrl_conf_enable_msi_mapping[] = {
 	RES_PCI_IO, PCI_ADDR(0, 0, 0, 0xe0), ~(0x00000000), 0x00010000,	/* Enable MSI mapping on host bridge -- without this Linux cannot use the network device MSI interrupts! */
 };
+#endif
 
 static void ck804_control(const unsigned int *values, u32 size,
 			  uint8_t bus_unit_id)
@@ -103,6 +105,8 @@ static void ck804_control(const unsigned int *values, u32 size,
 	ck804_early_clear_port(ck804_num, busn, io_base);
 }
 
+#if 0
+// this must be moved somewhere
 static void sio_setup(void)
 {
 	u32 dword;
@@ -119,6 +123,7 @@ static void sio_setup(void)
 	dword |= (1 << 0) | (1 << 1);
 	pci_write_config32(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0xa0, dword);
 }
+#endif
 
 void activate_spd_rom(const struct mem_controller *ctrl)
 {
@@ -140,9 +145,25 @@ void mainboard_sysinfo_hook(struct sys_info *sysinfo)
 
 void mainboard_early_init(int s3_resume)
 {
+	// added setting wants_reset here from ck804
+	u32 wants_reset = ck804_early_setup_x();
+
+	/* Reset for HT, FIDVID, PLL and errata changes to take affect. */
+	if (!warm_reset_detect(0)) {
+		printk(BIOS_INFO, "...WARM RESET...\n\n\n");
+		soft_reset();
+		die("After soft_reset - shouldn't see this message!!!\n");
+	}
+
+	// added debug output for wants_reset
+	if (wants_reset) {
+		printk(BIOS_DEBUG, "ck804_early_setup_x wanted additional reset!\n");
+	}
+
 	// no peripheral control lines
 
 	// changed pci_write_config16 for SP5100 GPIOs to pnp_write_config for SuperIO gpios
+	
 	/* Initialize GPIO */
 	/* Access SuperIO GPI03 logical device */
 	pnp_enter_conf_state(GPIO3_DEV);
