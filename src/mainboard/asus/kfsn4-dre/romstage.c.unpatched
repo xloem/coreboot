@@ -1,3 +1,28 @@
+/***
+* Immediate changes to migrate over:
+
+the bulk of the changes are splitting cache_as_ram into multiple public functions
+and removing the spinlocks.
+
+- [ ] license is changed
+- [ ] includes are changed
+- [ ] DIMM defines are embedded
+- [ ] spd_read_byte is removed
+- [ ] spd_addr structures are moved down in file
+- [ ] ht_speed_limit setting is moved into a special purpose function, mainboard_sysinfo_hook
+- [ ] get_option(&storage, name) == SUCCESS ==>> transformed into get_uint_option(name, val)
+- [ ] DIMMSetVoltage, reflowed, nvram removed, get_option transformed
+- [ ] chunks of cache_as_ram_main are moved into mainboard_early_init
+- [ ] other parts of cache_as_ram_main are moved into mainboard_spd_info
+- [ ] execute_memory_test is undisabled
+- [ ] further parts of cache_as_ram_main are moved into mainboard_after_raminit
+- [ ] removed functions: spd_read_byte, romstage_console_lock, initialize_romstage_console_lock, romstage_nvram_cbfs_lock,
+                     initialize_romstage_nvram_cbfs_lock, romstage_microcode_cbfs_lock, initialize_romstage_microcode_cbfs_lock,
+                     cache_as_ram_main
+***/
+
+
+
 /*
  * This file is part of the coreboot project.
  *
