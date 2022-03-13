@@ -8,7 +8,7 @@ and removing the spinlocks.
 - [x] includes are changed
 - [x] DIMM defines are embedded
 - [x] spd_read_byte is removed
-- [ ] spd_addr structures are moved down in file
+- [x] spd_addr structures are moved down in file
 - [ ] ht_speed_limit setting is moved into a special purpose function, mainboard_sysinfo_hook
 - [ ] get_option(&storage, name) == SUCCESS ==>> transformed into get_uint_option(name, val)
 - [ ] DIMMSetVoltage, reflowed, nvram removed, get_option transformed
@@ -157,13 +157,6 @@ static void sio_setup(void)
 	pci_write_config32(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0xa0, dword);
 }
 
-static const uint8_t spd_addr[] = {
-	// Node 0
-	RC00, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
-	// Node 1
-	RC01, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
-};
-
 void activate_spd_rom(const struct mem_controller *ctrl)
 {
 	printk(BIOS_DEBUG, "activate_spd_rom() for node %02x\n", ctrl->node_id);
@@ -176,6 +169,13 @@ void activate_spd_rom(const struct mem_controller *ctrl)
 		ck804_control(ctrl_conf_enable_spd_node1, ARRAY_SIZE(ctrl_conf_enable_spd_node1), CK804_DEVN_BASE);
 	}
 }
+
+static const uint8_t spd_addr[] = {
+	// Node 0
+	RC00, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
+	// Node 1
+	RC01, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
+};
 
 void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 {
