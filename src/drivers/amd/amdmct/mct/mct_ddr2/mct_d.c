@@ -2496,13 +2496,22 @@ static u8 mct_setMode(struct MCTStatStruc *pMCTstat,
 
 u32 Get_NB32(u32 dev, u32 reg)
 {
-	return pci_read_config32(dev, reg);
+	if (reg < 4096) {
+		return pci_read_config32(dev, reg);
+	} else {
+		printk(BIOS_WARNING, "Get_NB32 overflow %x", reg);
+		return 0;
+	}
 }
 
 
 void Set_NB32(u32 dev, u32 reg, u32 val)
 {
-	pci_write_config32(dev, reg, val);
+	if (reg < 4096) {
+		pci_write_config32(dev, reg, val);
+	} else {
+		printk(BIOS_WARNING, "Set_NB32 overflow %x <- %x", reg, val);
+	}
 }
 
 

@@ -1,0 +1,1475 @@
+diff -u mct_ddr3-old/mctardk5.c mct_ddr3/mctardk5.c
+--- mct_ddr3-old/mctardk5.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctardk5.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,41 +1,12 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /* AM3/ASB2/C32/G34 DDR3 */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ static void Get_ChannelPS_Cfg0_D(u8 MAAdimms, u8 Speed, u8 MAAload,
+ 				u32 *ODC_CTL,
+ 				u8 *CMDmode);
+diff -u mct_ddr3-old/mctardk6.c mct_ddr3/mctardk6.c
+--- mct_ddr3-old/mctardk6.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctardk6.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,18 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /* The socket type Fr2, G (1207) are not tested.
+  */
+diff -u mct_ddr3-old/mctchi_d.c mct_ddr3/mctchi_d.c
+--- mct_ddr3-old/mctchi_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctchi_d.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,20 +1,7 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ #include <console/console.h>
+ 
+diff -u mct_ddr3-old/mctcsi_d.c mct_ddr3/mctcsi_d.c
+--- mct_ddr3-old/mctcsi_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctcsi_d.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,18 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /* Low swap bit vs bank size encoding (physical, not logical address bit)
+  * ;To calculate the number by hand, add the number of Bank address bits
+@@ -21,9 +7,10 @@
+  */
+ 
+ #include <stdint.h>
+-#include "mct_d.h"
+-#include "mct_d_gcc.h"
+ #include <console/console.h>
++#include <drivers/amd/amdmct/wrappers/mcti.h>
++#include "mct_d_gcc.h"
++
+ 
+ static const u8 Tab_int_D[] = {6,7,7,8,8,8,8,8,9,9,8,9};
+ 
+diff -u mct_ddr3-old/mct_d.c mct_ddr3/mct_d.c
+--- mct_ddr3-old/mct_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mct_d.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,18 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2015-2017 Raptor Engineering, LLC
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /* Description: Main memory controller system configuration for DDR 3 */
+ 
+@@ -34,21 +20,23 @@
+ 
+ #include <console/console.h>
+ #include <northbridge/amd/amdfam10/debug.h>
+-#include <northbridge/amd/amdfam10/raminit.h>
+ #include <northbridge/amd/amdfam10/amdfam10.h>
+ #include <southbridge/amd/common/reset.h>
++#include <cpu/amd/common/common.h>
+ #include <cpu/x86/msr.h>
+ #include <cpu/amd/msr.h>
+ #include <cpu/x86/mtrr.h>
+ #include <device/pci_ops.h>
+-#include <arch/acpi.h>
++#include <acpi/acpi.h>
++#include <delay.h>
+ #include <string.h>
+ #include <types.h>
+ #include <device/dram/ddr3.h>
++#include <option.h>
+ 
+ #include "s3utils.h"
+ #include "mct_d_gcc.h"
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ 
+ static u8 ReconfigureDIMMspare_D(struct MCTStatStruc *pMCTstat,
+ 					struct DCTStatStruc *pDCTstatA);
+@@ -2598,8 +2586,6 @@
+ 	u8 Node, NodesWmem;
+ 	u32 node_sys_base;
+ 	uint8_t dimm;
+-	uint8_t nvram;
+-	uint8_t enable_cc6;
+ 	uint8_t ecc_enabled;
+ 	uint8_t allow_config_restore;
+ 
+@@ -2675,7 +2661,7 @@
+ 			mctNodeIDDebugPort_D();
+ 			pDCTstat->NodePresent = NodePresent_D(Node);
+ 			if (pDCTstat->NodePresent) {
+-				pDCTstat->LogicalCPUID = mctGetLogicalCPUID_D(Node);
++				pDCTstat->LogicalCPUID = get_logical_CPUID(Node);
+ 
+ 				printk(BIOS_DEBUG, "%s: mct_InitialMCT_D\n", __func__);
+ 				mct_InitialMCT_D(pMCTstat, pDCTstat);
+@@ -2689,10 +2675,8 @@
+ 			node_sys_base = pDCTstat->NodeSysBase;
+ 			node_sys_base += (pDCTstat->NodeSysLimit + 2) & ~0x0F;
+ 		}
+-
+ 		/* If the boot fails make sure training is attempted after reset */
+-		nvram = 0;
+-		set_option("allow_spd_nvram_cache_restore", &nvram);
++		set_uint_option("allow_spd_nvram_cache_restore", 0);
+ 
+ #if CONFIG(DIMM_VOLTAGE_SET_SUPPORT)
+ 		printk(BIOS_DEBUG, "%s: DIMMSetVoltage\n", __func__);
+@@ -2835,11 +2819,7 @@
+ 		}
+ 
+ 		if (is_fam15h()) {
+-			enable_cc6 = 0;
+-			if (get_option(&nvram, "cpu_cc6_state") == CB_SUCCESS)
+-				enable_cc6 = !!nvram;
+-
+-			if (enable_cc6) {
++			if (get_uint_option("cpu_cc6_state", 0)) {
+ 				uint8_t num_nodes;
+ 
+ 				num_nodes = 0;
+@@ -4003,17 +3983,24 @@
+ 
+ 	/* Ensure that a memory clear operation has completed on one node */
+ 	if (pDCTstat->DCTSysLimit) {
+-		printk(BIOS_DEBUG, "%s: Waiting for memory clear to complete", __func__);
++		printk(BIOS_DEBUG, "%s: Waiting for memory clear to complete\n", __func__);
+ 		do {
+ 			dword = Get_NB32(dev, 0x110);
+-
+-			printk(BIOS_DEBUG, ".");
++			if (CONFIG(CONSOLE_SERIAL)) {
++				/* Indicate the process is in progress only on serial. Delay prevents printing many dots */
++				mdelay(10);
++				printk(BIOS_DEBUG, ".");
++			}
+ 		} while (dword & (1 << MemClrBusy));
+ 
+ 		printk(BIOS_DEBUG, "\n");
+ 		do {
+-			printk(BIOS_DEBUG, ".");
+ 			dword = Get_NB32(dev, 0x110);
++			if (CONFIG(CONSOLE_SERIAL)) {
++				/* Indicate the process is in progress only on serial. Delay prevents printing many dots */
++				mdelay(5);
++				printk(BIOS_DEBUG, ".");
++			}
+ 		} while (!(dword & (1 << Dr_MemClrStatus)));
+ 		printk(BIOS_DEBUG, "\n");
+ 	}
+@@ -5806,7 +5793,6 @@
+ 				struct DCTStatStruc *pDCTstat)
+ {
+ 	u8 err_code;
+-	uint8_t nvram;
+ 	uint8_t allow_config_restore;
+ 
+ 	/* Preconfigure DCT0 */
+@@ -5836,9 +5822,7 @@
+ #endif
+ 
+ 	/* Check to see if restoration of SPD data from NVRAM is allowed */
+-	allow_config_restore = 0;
+-	if (get_option(&nvram, "allow_spd_nvram_cache_restore") == CB_SUCCESS)
+-		allow_config_restore = !!nvram;
++	allow_config_restore = get_uint_option("allow_spd_nvram_cache_restore", 0);
+ 
+ #if CONFIG(HAVE_ACPI_RESUME)
+ 	if (pMCTstat->nvram_checksum != calculate_nvram_mct_hash())
+@@ -6623,13 +6607,11 @@
+ 				mct_ExtMCTConfig_Dx(pDCTstat);
+ 			} else {
+ 				/* Family 15h CPUs */
+-				uint8_t nvram;
+ 				uint8_t enable_experimental_memory_speed_boost;
+ 
+ 				/* Check to see if cache partitioning is allowed */
+-				enable_experimental_memory_speed_boost = 0;
+-				if (get_option(&nvram, "experimental_memory_speed_boost") == CB_SUCCESS)
+-					enable_experimental_memory_speed_boost = !!nvram;
++				enable_experimental_memory_speed_boost =
++					get_uint_option("experimental_memory_speed_boost", 0);
+ 
+ 				val = 0x0ce00f00;		/* FlushWrOnStpGnt = 0x0 */
+ 				val |= 0x10 << 2;		/* MctWrLimit = 0x10 */
+diff -u mct_ddr3-old/mct_d_gcc.c mct_ddr3/mct_d_gcc.c
+--- mct_ddr3-old/mct_d_gcc.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mct_d_gcc.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,18 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include "mct_d_gcc.h"
+ #include <stdint.h>
+diff -u mct_ddr3-old/mct_d_gcc.h mct_ddr3/mct_d_gcc.h
+--- mct_ddr3-old/mct_d_gcc.h	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mct_d_gcc.h	2022-03-12 18:03:06.736439634 -0500
+@@ -1,19 +1,5 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- * Copyright (C) 2016 Damien Zammit <damien@zamaudio.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
++
+ #ifndef MCT_D_GCC_H
+ #define MCT_D_GCC_H
+ 
+diff -u mct_ddr3-old/mct_d.h mct_ddr3/mct_d.h
+--- mct_ddr3-old/mct_d.h	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mct_d.h	2022-03-12 18:03:06.736439634 -0500
+@@ -1,18 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2015-2017 Raptor Engineering, LLC
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /*
+  * Description: Include file for all generic DDR 3 MCT files.
+@@ -23,7 +9,6 @@
+ #define DQS_TRAIN_DEBUG 0
+ 
+ #include <stdint.h>
+-#include <northbridge/amd/amdfam10/raminit.h>
+ 
+ /*===========================================================================
+ 	CPU - K8/FAM10
+@@ -1005,7 +990,6 @@
+ void initialize_mca(uint8_t bsp, uint8_t suppress_errors);
+ void CPUMemTyping_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA);
+ void UMAMemTyping_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA);
+-uint64_t mctGetLogicalCPUID(u32 Node);
+ u8 ECCInit_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA);
+ void TrainReceiverEn_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA, u8 Pass);
+ void TrainMaxRdLatency_En_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstatA);
+diff -u mct_ddr3-old/mctdqs_d.c mct_ddr3/mctdqs_d.c
+--- mct_ddr3-old/mctdqs_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctdqs_d.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,18 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 - 2016 Raptor Engineering, LLC
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+ #include <console/console.h>
+@@ -21,7 +7,7 @@
+ #include <arch/cpu.h>
+ #include <cpu/amd/msr.h>
+ #include <cpu/amd/mtrr.h>
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ static void CalcEccDQSPos_D(struct MCTStatStruc *pMCTstat,
+@@ -50,23 +36,7 @@
+ 
+ static void StoreDQSDatStrucVal_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstat, u8 ChipSel);
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+-#define DQS_TRAIN_DEBUG 0
+-// #define PRINT_PASS_FAIL_BITMAPS 1
++#define PRINT_PASS_FAIL_BITMAPS CONFIG(DEBUG_RAM_SETUP)
+ 
+ void print_debug_dqs(const char *str, u32 val, u8 level)
+ {
+@@ -664,7 +634,7 @@
+ 			for (lane = 0; lane < 8; lane++) {
+ 				if ((!dual_rank) || (dual_rank && (Receiver & 0x1))) {
+ 
+-#ifdef PRINT_PASS_FAIL_BITMAPS
++#if PRINT_PASS_FAIL_BITMAPS
+ 					for (iter = 0; iter < 64; iter++) {
+ 						if (dqs_read_results_array[0][lane][iter])
+ 							printk(BIOS_DEBUG, "+");
+@@ -1546,7 +1516,7 @@
+ 				passing_dqs_delay_found[lane] = 1;
+ 		}
+ 
+-#ifdef PRINT_PASS_FAIL_BITMAPS
++#if PRINT_PASS_FAIL_BITMAPS
+ 		for (lane = lane_start; lane < lane_end; lane++) {
+ 			for (write_iter = 0; write_iter < 32; write_iter++) {
+ 				for (read_iter = 0; read_iter < 48; read_iter++) {
+@@ -1775,7 +1745,7 @@
+ 					break;
+ 				}
+ 
+-#ifdef PRINT_PASS_FAIL_BITMAPS
++#if PRINT_PASS_FAIL_BITMAPS
+ 				for (phase_delay = 0; phase_delay < 0x3ff; phase_delay++) {
+ 					if (dqs_results_array[phase_delay])
+ 						printk(BIOS_DEBUG, "+");
+diff -u mct_ddr3-old/mctecc_d.c mct_ddr3/mctecc_d.c
+--- mct_ddr3-old/mctecc_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctecc_d.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,46 +1,16 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 - 2016 Raptor Engineering, LLC
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+ #include <console/console.h>
+ #include <device/pci_ops.h>
+-
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ static void setSyncOnUnEccEn_D(struct MCTStatStruc *pMCTstat,
+ 				struct DCTStatStruc *pDCTstatA);
+ static u8 isDramECCEn_D(struct DCTStatStruc *pDCTstat);
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ /* Initialize ECC modes of Integrated Dram+Memory Controllers of a network of
+  * Hammer processors.  Use Dram background scrubber to fast initialize ECC bits
+  * of all dram.
+diff -u mct_ddr3-old/mcthdi.c mct_ddr3/mcthdi.c
+--- mct_ddr3-old/mcthdi.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mcthdi.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,21 +1,7 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ void mct_DramInit_Hw_D(struct MCTStatStruc *pMCTstat,
+diff -u mct_ddr3-old/mcthwl.c mct_ddr3/mcthwl.c
+--- mct_ddr3-old/mcthwl.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mcthwl.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,41 +1,12 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+ #include <console/console.h>
+ #include <string.h>
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ static void SetEccWrDQS_D(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstat)
+ {
+ 	u8 ByteLane, DimmNum, OddByte, Addl_Index, Channel;
+diff -u mct_ddr3-old/mctmtr_d.c mct_ddr3/mctmtr_d.c
+--- mct_ddr3-old/mctmtr_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctmtr_d.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,25 +1,11 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+ #include <console/console.h>
+ #include <cpu/amd/mtrr.h>
+ #include <cpu/x86/mtrr.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ static void SetMTRRrangeWB_D(u32 Base, u32 *pLimit, u32 *pMtrrAddr);
+diff -u mct_ddr3-old/mctndi_d.c mct_ddr3/mctndi_d.c
+--- mct_ddr3-old/mctndi_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctndi_d.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,23 +1,9 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+ #include <console/console.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ void InterleaveNodes_D(struct MCTStatStruc *pMCTstat,
+diff -u mct_ddr3-old/mctprob.c mct_ddr3/mctprob.c
+--- mct_ddr3-old/mctprob.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctprob.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,21 +1,7 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+-
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ void mct_BeforeDQSTrainSamp(struct DCTStatStruc *pDCTstat)
+diff -u mct_ddr3-old/mctproc.c mct_ddr3/mctproc.c
+--- mct_ddr3-old/mctproc.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctproc.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,22 +1,8 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ /* mct_SetDramConfigMisc2_Cx & mct_SetDramConfigMisc2_Dx */
+diff -u mct_ddr3-old/mctprod.c mct_ddr3/mctprod.c
+--- mct_ddr3-old/mctprod.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctprod.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,22 +1,8 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ void mct_ExtMCTConfig_Dx(struct DCTStatStruc *pDCTstat)
+diff -u mct_ddr3-old/mctrci.c mct_ddr3/mctrci.c
+--- mct_ddr3-old/mctrci.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctrci.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,41 +1,12 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 - 2016 Raptor Engineering, LLC
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+ #include <console/console.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ static uint8_t fam15h_rdimm_rc2_ibt_code(struct DCTStatStruc *pDCTstat, uint8_t dct)
+ {
+ 	uint8_t MaxDimmsInstallable = mctGet_NVbits(NV_MAX_DIMMS_PER_CH);
+diff -u mct_ddr3-old/mctsdi.c mct_ddr3/mctsdi.c
+--- mct_ddr3-old/mctsdi.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctsdi.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,41 +1,12 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+ #include <console/console.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ uint8_t fam15_dimm_dic(struct DCTStatStruc *pDCTstat, uint8_t dct, uint8_t dimm, uint8_t rank, uint8_t package_type)
+ {
+ 	uint8_t dic;
+diff -u mct_ddr3-old/mctsrc1p.c mct_ddr3/mctsrc1p.c
+--- mct_ddr3-old/mctsrc1p.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctsrc1p.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,40 +1,11 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ u8 mct_checkNumberOfDqsRcvEn_1Pass(u8 pass)
+ {
+ 	u8 ret = 1;
+diff -u mct_ddr3-old/mctsrc2p.c mct_ddr3/mctsrc2p.c
+--- mct_ddr3-old/mctsrc2p.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctsrc2p.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,19 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ u8 mct_checkNumberOfDqsRcvEn_Pass(u8 pass)
+ {
+diff -u mct_ddr3-old/mctsrc.c mct_ddr3/mctsrc.c
+--- mct_ddr3-old/mctsrc.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctsrc.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,19 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 - 2016 Raptor Engineering, LLC
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /******************************************************************************
+  Description: Receiver En and DQS Timing Training feature for DDR 3 MCT
+@@ -26,7 +11,7 @@
+ #include <string.h>
+ #include <cpu/x86/msr.h>
+ #include <cpu/amd/msr.h>
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ static void dqsTrainRcvrEn_SW_Fam10(struct MCTStatStruc *pMCTstat,
+@@ -42,21 +27,6 @@
+ static void mct_SetMaxLatency_D(struct DCTStatStruc *pDCTstat, u8 Channel, u16 DQSRcvEnDly);
+ static void mct_DisableDQSRcvEn_D(struct DCTStatStruc *pDCTstat);
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ /* Warning:  These must be located so they do not cross a logical 16-bit
+    segment boundary! */
+ const u32 TestPattern0_D[] = {
+diff -u mct_ddr3-old/mcttmrl.c mct_ddr3/mcttmrl.c
+--- mct_ddr3-old/mcttmrl.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mcttmrl.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,18 +1,4 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /*
+  * Description: Max Read Latency Training feature for DDR 3 MCT
+@@ -22,7 +8,7 @@
+ #include <console/console.h>
+ #include <cpu/amd/msr.h>
+ #include <cpu/x86/cr.h>
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ static u8 CompareMaxRdLatTestPattern_D(u32 pattern_buf, u32 addr);
+diff -u mct_ddr3-old/mctwl.c mct_ddr3/mctwl.c
+--- mct_ddr3-old/mctwl.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mctwl.c	2022-03-12 18:03:06.736439634 -0500
+@@ -1,41 +1,12 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 - 2016 Raptor Engineering, LLC
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+ #include <console/console.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ static void AgesaDelay(u32 msec)
+ {
+ 	mct_Wait(msec*10);
+diff -u mct_ddr3-old/mhwlc_d.c mct_ddr3/mhwlc_d.c
+--- mct_ddr3-old/mhwlc_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mhwlc_d.c	2022-03-12 18:03:06.740439771 -0500
+@@ -1,32 +1,18 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 - 2016 Raptor Engineering, LLC
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <stdint.h>
+ #include <assert.h>
+ #include <console/console.h>
+ #include <northbridge/amd/amdfam10/amdfam10.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ #include "mwlc_d.h"
+ 
+ u32 swapAddrBits_wl(struct DCTStatStruc *pDCTstat, uint8_t dct, uint32_t MRSValue);
+ u32 swapBankBits(struct DCTStatStruc *pDCTstat, uint8_t dct, uint32_t MRSValue);
+ void prepareDimms(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstat,
+-	u8 dct, u8 dimm, BOOL wl);
++	u8 dct, u8 dimm, bool wl);
+ void programODT(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstat, uint8_t dct, u8 dimm);
+ void procConfig(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstat, uint8_t dct, uint8_t dimm, uint8_t pass, uint8_t nibble);
+ void setWLByteDelay(struct DCTStatStruc *pDCTstat, uint8_t dct, u8 ByteLane, u8 dimm, u8 targetAddr, uint8_t pass, uint8_t lane_count);
+@@ -486,7 +472,7 @@
+ }
+ 
+ /*-----------------------------------------------------------------------------
+- *  void prepareDimms(sMCTStruct *pMCTData, sDCTStruct *DCTData, u8 Dimm, BOOL WL)
++ *  void prepareDimms(sMCTStruct *pMCTData, sDCTStruct *DCTData, u8 Dimm, bool WL)
+  *
+  *  Description:
+  *       This function prepares DIMMS for training
+@@ -495,7 +481,7 @@
+  * ----------------------------------------------------------------------------
+  */
+ void prepareDimms(struct MCTStatStruc *pMCTstat, struct DCTStatStruc *pDCTstat,
+-	u8 dct, u8 dimm, BOOL wl)
++	u8 dct, u8 dimm, bool wl)
+ {
+ 	u32 tempW, tempW1, tempW2, MrsBank;
+ 	u8 rank, currDimm, MemClkFreq;
+diff -u mct_ddr3-old/modtrd.c mct_ddr3/modtrd.c
+--- mct_ddr3-old/modtrd.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/modtrd.c	2022-03-12 18:03:06.740439771 -0500
+@@ -1,21 +1,7 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-
++/* SPDX-License-Identifier: GPL-2.0-only */
+ #include <stdint.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ u32 mct_MR1Odt_RDimm(struct MCTStatStruc *pMCTstat,
+diff -u mct_ddr3-old/modtrdim.c mct_ddr3/modtrdim.c
+--- mct_ddr3-old/modtrdim.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/modtrdim.c	2022-03-12 18:03:06.740439771 -0500
+@@ -1,25 +1,11 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /* This file contains functions for odt setting on registered DDR3 dimms */
+ 
+ #include <stdint.h>
+ #include <console/console.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ /**
+@@ -36,7 +22,7 @@
+  *
+  *     @return     tempW1 - Rtt_Nom
+  */
+-u32 RttNomTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, BOOL wl, u8 MemClkFreq, u8 rank)
++u32 RttNomTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, bool wl, u8 MemClkFreq, u8 rank)
+ {
+ 	u32 tempW1;
+ 	tempW1 = 0;
+@@ -149,7 +135,7 @@
+  *
+  *      @return    tempW1 - Rtt_Nom
+  */
+-u32 RttNomNonTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, BOOL wl, u8 MemClkFreq, u8 rank)
++u32 RttNomNonTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, bool wl, u8 MemClkFreq, u8 rank)
+ {
+ 	if ((wl) && (mctGet_NVbits(NV_MAX_DIMMS_PER_CH) == 2) && (pDCTData->DimmRanks[dimm] == 2) && (rank == 1)) {
+ 		return 0x00;	/* for non-target dimm during WL, the second rank of a DR dimm need to have Rtt_Nom = OFF */
+@@ -174,7 +160,7 @@
+  *      @return    tempW1 - Rtt_Wr
+  */
+ 
+-u32 RttWrRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, BOOL wl, u8 MemClkFreq, u8 rank)
++u32 RttWrRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, bool wl, u8 MemClkFreq, u8 rank)
+ {
+ 	u32 tempW1;
+ 	tempW1 = 0;
+diff -u mct_ddr3-old/mport_d.c mct_ddr3/mport_d.c
+--- mct_ddr3-old/mport_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mport_d.c	2022-03-12 18:03:06.740439771 -0500
+@@ -1,22 +1,9 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <arch/io.h>
+ #include <stdint.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ #include "mwlc_d.h"
+ 
+diff -u mct_ddr3-old/mutilc_d.c mct_ddr3/mutilc_d.c
+--- mct_ddr3-old/mutilc_d.c	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mutilc_d.c	2022-03-12 18:03:06.740439771 -0500
+@@ -1,43 +1,14 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ /* This file contains functions for common utility functions */
+ 
+ #include <arch/cpu.h>
+ #include <stdint.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ #include "mwlc_d.h"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ void AmdMemPCIReadBits(SBDFO loc, u8 highbit, u8 lowbit, u32 *pValue)
+ {
+ 	/* ASSERT(highbit < 32 && lowbit < 32 && highbit >= lowbit && (loc & 3) == 0); */
+@@ -344,7 +315,7 @@
+ }
+ 
+ /*-------------------------------------------------
+- * BOOL bitTest(u32 value, u8 bitLoc)
++ * bool bitTest(u32 value, u8 bitLoc)
+  *
+  * Description:
+  *     This routine tests the value to determine if the bitLoc is set
+@@ -356,7 +327,7 @@
+  *          FALSE - bit is clear
+  *-------------------------------------------------
+  */
+-BOOL bitTest(u32 value, u8 bitLoc)
++bool bitTest(u32 value, u8 bitLoc)
+ {
+ 	u32 tempD, compD;
+ 	tempD = value;
+diff -u mct_ddr3-old/mwlc_d.h mct_ddr3/mwlc_d.h
+--- mct_ddr3-old/mwlc_d.h	2022-03-12 16:50:56.594272477 -0500
++++ mct_ddr3/mwlc_d.h	2022-03-12 18:03:06.740439771 -0500
+@@ -1,23 +1,32 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2010 Advanced Micro Devices, Inc.
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
++
+ /* IBV defined Structure */ /* IBV Specific Options */
+ #ifndef MWLC_D_H
+ #define MWLC_D_H
+ 
+-#include <northbridge/amd/amdht/porting.h>
++#include <stdbool.h>
++/*
++ *   SBDFO - Segment Bus Device Function Offset
++ *   31:28   Segment (4-bits)
++ *   27:20   Bus     (8-bits)
++ *   19:15   Device  (5-bits)
++ *   14:12   Function(3-bits)
++ *   11:00   Offset  (12-bits)
++ */
++typedef uint32_t SBDFO;
++
++#define BYTESIZE 1
++#define WORDSIZE 2
++#define DWORDSIZE 4
++
++#define MAKE_SBDFO(seg,bus,dev,fun,off) ((((uint32)(seg))<<28) | (((uint32)(bus))<<20) | \
++		    (((uint32)(dev))<<15) | (((uint32)(fun))<<12) | ((uint32)(off)))
++#define SBDFO_SEG(x) (((uint32)(x)>>28) & 0x0F)
++#define SBDFO_BUS(x) (((uint32)(x)>>20) & 0xFF)
++#define SBDFO_DEV(x) (((uint32)(x)>>15) & 0x1F)
++#define SBDFO_FUN(x) (((uint32)(x)>>12) & 0x07)
++#define SBDFO_OFF(x) (((uint32)(x)) & 0xFFF)
++#define ILLEGAL_SBDFO 0xFFFFFFFF
+ 
+ #define MAX_TOTAL_DIMMS 8	/* Maximum Number of DIMMs in systems */
+ 				/* (DCT0 + DCT1) */
+@@ -178,10 +187,10 @@
+ void set_Bits(sDCTStruct *pDCTData,
+ 		u8 dct, u8 node, u8 func,
+ 		u16 offset, u8 low, u8 high, u32 value);
+-BOOL bitTest(u32 value, u8 bitLoc);
+-u32 RttNomNonTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, BOOL wl, u8 MemClkFreq, u8 rank);
+-u32 RttNomTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, BOOL wl, u8 MemClkFreq, u8 rank);
+-u32 RttWrRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, BOOL wl, u8 MemClkFreq, u8 rank);
++bool bitTest(u32 value, u8 bitLoc);
++u32 RttNomNonTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, bool wl, u8 MemClkFreq, u8 rank);
++u32 RttNomTargetRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, bool wl, u8 MemClkFreq, u8 rank);
++u32 RttWrRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm, bool wl, u8 MemClkFreq, u8 rank);
+ u8 WrLvOdtRegDimm (sMCTStruct *pMCTData, sDCTStruct *pDCTData, u8 dimm);
+ u32 get_ADD_DCT_Bits(sDCTStruct *pDCTData,
+ 		u8 dct, u8 node, u8 func,
+diff -u mct_ddr3-old/s3utils.c mct_ddr3/s3utils.c
+--- mct_ddr3-old/s3utils.c	2022-03-12 16:50:56.598272644 -0500
++++ mct_ddr3/s3utils.c	2022-03-12 18:03:06.740439771 -0500
+@@ -1,21 +1,8 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ 
+ #include <string.h>
+ #include <arch/cpu.h>
+-#include <arch/acpi.h>
++#include <acpi/acpi.h>
+ #include <cpu/x86/msr.h>
+ #include <cpu/amd/msr.h>
+ #include <cpu/x86/mtrr.h>
+@@ -30,30 +17,16 @@
+ #include <spi_flash.h>
+ #include <pc80/mc146818rtc.h>
+ #include <stdint.h>
++#include <option.h>
+ #include <types.h>
+ 
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ #include "mct_d_gcc.h"
+ 
+ #include "s3utils.h"
+ 
+ #define S3NV_FILE_NAME "s3nv"
+ 
+-static uint8_t is_fam15h(void)
+-{
+-	uint8_t fam15h = 0;
+-	uint32_t family;
+-
+-	family = cpuid_eax(0x80000001);
+-	family = ((family & 0xf00000) >> 16) | ((family & 0xf00) >> 8);
+-
+-	if (family >= 0x6f)
+-		/* Family 15h or later */
+-		fam15h = 1;
+-
+-	return fam15h;
+-}
+-
+ static ssize_t get_s3nv_file_offset(void);
+ 
+ ssize_t get_s3nv_file_offset(void)
+@@ -200,26 +173,16 @@
+ 	uint16_t ret;
+ 
+ 	ret = 0;
+-	if (get_option(&nvram, "max_mem_clock") == CB_SUCCESS)
+-		ret |= nvram & 0xf;
+-	if (get_option(&nvram, "minimum_memory_voltage") == CB_SUCCESS)
+-		ret |= (nvram & 0x3) << 4;
+-	if (get_option(&nvram, "ECC_memory") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 6;
+-	if (get_option(&nvram, "ECC_redirection") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 7;
+-	if (get_option(&nvram, "ecc_scrub_rate") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 8;
+-	if (get_option(&nvram, "interleave_chip_selects") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 9;
+-	if (get_option(&nvram, "interleave_nodes") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 10;
+-	if (get_option(&nvram, "interleave_memory_channels") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 11;
+-	if (get_option(&nvram, "cpu_c_states") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 12;
+-	if (get_option(&nvram, "cpu_cc6_state") == CB_SUCCESS)
+-		ret |= (nvram & 0x1) << 13;
++	ret |=  get_uint_option("max_mem_clock", 0) & 0xf;
++	ret |= (get_uint_option("minimum_memory_voltage", 0) & 0x3) << 4;
++	ret |= (get_uint_option("ECC_memory", 1) & 0x1) << 6;
++	ret |= (get_uint_option("ECC_redirection", 1) & 0x1) << 7;
++	ret |= (get_uint_option("ecc_scrub_rate", 6) & 0x1) << 8;
++	ret |= (get_uint_option("interleave_chip_selects", 1) & 0x1) << 9;
++	ret |= (get_uint_option("interleave_nodes", 0) & 0x1) << 10;
++	ret |= (get_uint_option("interleave_memory_channels", 1) & 0x1) << 11;
++	ret |= (get_uint_option("cpu_c_states", 1) & 0x1) << 12;
++	ret |= (get_uint_option("cpu_cc6_state", 1) & 0x1) << 13;
+ 
+ 	return ret;
+ }
+@@ -1157,7 +1120,7 @@
+ 	if (restored) {
+ 		/* Allow training bypass if DIMM configuration is unchanged on next boot */
+ 		nvram = 1;
+-		set_option("allow_spd_nvram_cache_restore", &nvram);
++		set_uint_option("allow_spd_nvram_cache_restore", &nvram);
+ 
+ 		printk(BIOS_DEBUG, "Hardware configuration unchanged since last boot; skipping write\n");
+ 		free(persistent_data);
+@@ -1196,7 +1159,7 @@
+ 
+ 	/* Allow training bypass if DIMM configuration is unchanged on next boot */
+ 	nvram = 1;
+-	set_option("allow_spd_nvram_cache_restore", &nvram);
++	set_uint_option("allow_spd_nvram_cache_restore", &nvram);
+ 
+ 	return 0;
+ }
+diff -u mct_ddr3-old/s3utils.h mct_ddr3/s3utils.h
+--- mct_ddr3-old/s3utils.h	2022-03-12 16:50:56.598272644 -0500
++++ mct_ddr3/s3utils.h	2022-03-12 18:03:06.740439771 -0500
+@@ -1,22 +1,9 @@
+-/*
+- * This file is part of the coreboot project.
+- *
+- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++/* SPDX-License-Identifier: GPL-2.0-only */
++
+ #ifndef S3UTILS_H
+ #define S3UTILS_H
+ 
+-#include "../wrappers/mcti.h"
+-#include "mct_d.h"
++#include <drivers/amd/amdmct/wrappers/mcti.h>
+ 
+ #ifdef __RAMSTAGE__
+ int8_t save_mct_information_to_nvram(void);
