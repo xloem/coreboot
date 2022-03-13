@@ -11,7 +11,7 @@
  *         // console_init() ?
  * - [X] mainboard_romstage_entry:
  *         sb7xx_51xx_decode_last_reset -> power_on_reset call should be define'd out, probably based on some power-related flag
- * - mainboard_after_raminit:
+ * - [X] mainboard_after_raminit:
  *         instead of switch_spd_mux(0x1), we do
  *         ck804_control(ctrl_conf_disable_spd, ARRAY_SIZE(ctrl_conf_disable_spb), CK804_DEVN_BASE);
  *         ^------- look at first, where this is could bidirectionally inform ck804 scopes
@@ -212,10 +212,7 @@ void mainboard_spd_info(struct sys_info *sysinfo)
 
 void mainboard_after_raminit(struct sys_info *sysinfo)
 {
-	// no execute_memory_test
-
 	printk(BIOS_DEBUG, "disable_spd()\n");
-	// changed spd_mux stuff to ck804
 	ck804_control(ctrl_conf_disable_spd, ARRAY_SIZE(ctrl_conf_disable_spd), CK804_DEVN_BASE);
 }
 
