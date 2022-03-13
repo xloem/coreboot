@@ -160,9 +160,9 @@ void mainboard_early_init(int s3_resume)
 
 static const uint8_t spd_addr[] = {
 	// Node 0
-	RC00, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
+	0, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
 	// Node 1
-	RC01, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
+	1, DIMM0, DIMM2, DIMM4, DIMM6, DIMM1, DIMM3, DIMM5, DIMM7,
 };
 
 void mainboard_spd_info(struct sys_info *sysinfo)
