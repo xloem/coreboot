@@ -18,6 +18,8 @@
 #define SYSCTRL_IO_BASE 0x2000
 #define SYSCTRL_REG_POS 0x64
 
+#define CK804_BOARD_BOOT_BASE_UNIT_UID 1
+
 void enable_fid_change_on_sb(unsigned int sbbusn, unsigned int sbdn);
 
 #endif

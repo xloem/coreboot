@@ -5,7 +5,7 @@
  *
  * if we find new unmapped functions we can likely look at what subsystem they engage to put them in an appropriate place.
  * 
- * - bootblock_early_southbridge_init:
+ * - [X] bootblock_early_southbridge_init:
  *         sio_setup();
  *         // serial code might go in here, happens after sio_setup. should probably find a manual on these funcs
  *         // console_init() ?
@@ -15,6 +15,8 @@
  *         instead of switch_spd_mux(0x1), we do
  *         ck804_control(ctrl_conf_disable_spd, ARRAY_SIZE(ctrl_conf_disable_spb), CK804_DEVN_BASE);
  *         ^------- look at first, where this is could bidirectionally inform ck804 scopes
+ *         	spd seems to have to do with dram timing, so maybe i'll leave it where it is, which means
+ *         	exposing something from ck804, likely ck804_control itself.
  * - southbridge_early_setup:
  *         - no call to sb5650 and sb7xx early setups
  *         - ck804_control(ctrl_conf_fix_pci_numbering, ARRAY_SIZE(ctrl_conf_fix_pci_numbering), CK804_BOARD_BOOT_BASE_UNIT_UID);
@@ -79,8 +81,6 @@
  * which is required e.g. by lm-sensors.
  */
 
-#define CK804_BOARD_BOOT_BASE_UNIT_UID 1
-
 static const unsigned int ctrl_conf_enable_spd_node0[] = {
 	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+42, ~(0x0f),(0x04 | 0x00),/* W2,GPIO43, U6 input S0*/
 	RES_PORT_IO_8, SYSCTRL_IO_BASE + 0xc0+43, ~(0x0f),(0x04 | 0x00),/* W3,GPIO44, U6 input S1*/
@@ -140,26 +140,6 @@ static void ck804_control(const unsigned int *values, u32 size,
 
 	ck804_early_clear_port(ck804_num, busn, io_base);
 }
-
-#if 0
-// this must be moved somewhere
-static void sio_setup(void)
-{
-	u32 dword;
-	u8 byte;
-
-	/* Subject decoding */
-	byte = pci_read_config8(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0x7b);
-	byte |= 0x20;
-	pci_write_config8(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0x7b, byte);
-
-	/* LPC Positive Decode 0 */
-	dword = pci_read_config32(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0xa0);
-	/* Serial 0, Serial 1 */
-	dword |= (1 << 0) | (1 << 1);
-	pci_write_config32(PCI_DEV(0, CK804_BOARD_BOOT_BASE_UNIT_UID + 1, 0), 0xa0, dword);
-}
-#endif
 
 void activate_spd_rom(const struct mem_controller *ctrl)
 {
