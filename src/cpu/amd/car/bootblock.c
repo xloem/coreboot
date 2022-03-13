@@ -24,12 +24,14 @@ static void enable_pci_mmconf(void)
 	wrmsr(MMIO_CONF_BASE, mmconf);
 }
 
+/*
 static void *get_ap_entry_ptr(void)
 {
 	u32 entry;
 	load_bios_ram_data(&entry, 4, BIOSRAM_AP_ENTRY);
 	return (void *)entry;
 }
+*/
 
 asmlinkage void bootblock_c_entry_bist(uint64_t base_timestamp, uint32_t bist)
 {
@@ -41,9 +43,12 @@ asmlinkage void bootblock_c_entry_bist(uint64_t base_timestamp, uint32_t bist)
 		enable_lapic();
 
 	if (!boot_cpu()) {
-		void (*ap_romstage_entry)(void) = get_ap_entry_ptr();
-		ap_romstage_entry(); /* execution does not return */
-		halt();
+		printk(BIOS_WARNING, "WARNING: Some dasharo code here was reverted just to see more build errors.");
+		console_init();
+		run_romstage();
+		//void (*ap_romstage_entry)(void) = get_ap_entry_ptr();
+		//ap_romstage_entry(); /* execution does not return */
+		//halt();
 	}
 
 	/* Call lib/bootblock.c main */
