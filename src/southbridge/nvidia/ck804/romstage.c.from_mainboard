@@ -6,3 +6,17 @@
 
 #include <southbridge/nvidia/ck804/early_setup_ss.h>
 #include "southbridge/nvidia/ck804/early_setup_car.c"
+
+/**
+ * @brief Get SouthBridge device number
+ * @param[in] bus target bus number
+ * @return southbridge device number
+ */
+unsigned int get_sbdn(unsigned int bus)
+{
+	pci_devfn_t dev;
+
+	dev = pci_locate_device_on_bus(PCI_ID(PCI_VENDOR_ID_NVIDIA,
+					PCI_DEVICE_ID_NVIDIA_CK804_PRO), bus);
+	return (dev >> 15) & 0x1f;
+}

@@ -55,12 +55,6 @@ static void setup_ss_table(unsigned int index, unsigned int where, unsigned int 
 	outl(val, control);
 }
 
-#define ANACTRL_IO_BASE 0x3000
-#define ANACTRL_REG_POS 0x68
-
-#define SYSCTRL_IO_BASE 0x2000
-#define SYSCTRL_REG_POS 0x64
-
 /*
  * Values for CONFIG_CK804_PCI_E_X and CONFIG_CK804B_PCI_E_X.
  * Apparently some sort of lane configuration.

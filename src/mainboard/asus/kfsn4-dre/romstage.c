@@ -7,11 +7,16 @@
 #include <console/console.h>
 #include <cpu/amd/common/common.h>
 #include <southbridge/nvidia/ck804/early_smbus.h>
+#include <superio/winbond/common/winbond.h> // i think kgpe-d16 had removed this; it's for pnp_enter_conf_state for w83627
+#include <superio/winbond/w83627thg/w83627thg.h> // i think kgpe-d16 had removed this too, unsure of both
 #include <northbridge/amd/amdfam10/amdfam10.h>
 #include <northbridge/amd/amdfam10/raminit.h>
 
 #include <delay.h>
 #include <option.h>
+
+#include <southbridge/nvidia/ck804/early_setup_ss.h.unpatched>
+#include "southbridge/nvidia/ck804/early_setup_car.c.unpatched"
 
 /* DIMM SPD addresses */
 #define DIMM0	0x50
@@ -23,21 +28,8 @@
 #define DIMM6	0x56
 #define DIMM7	0x57
 
+// for w83627thg superio gpio
 #define GPIO3_DEV PNP_DEV(0x2e, W83627THG_GPIO3)
-
-/**
- * @brief Get SouthBridge device number
- * @param[in] bus target bus number
- * @return southbridge device number
- */
-unsigned int get_sbdn(unsigned int bus)
-{
-	pci_devfn_t dev;
-
-	dev = pci_locate_device_on_bus(PCI_ID(PCI_VENDOR_ID_NVIDIA,
-					PCI_DEVICE_ID_NVIDIA_CK804_PRO), bus);
-	return (dev >> 15) & 0x1f;
-}
 
 /*
  * ASUS KFSN4-DRE specific SPD enable/disable magic.
