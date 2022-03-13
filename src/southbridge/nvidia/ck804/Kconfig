@@ -3,12 +3,10 @@ config SOUTHBRIDGE_NVIDIA_CK804
 	select HAVE_USBDEBUG
 	select IOAPIC
 	select HAVE_POWER_STATE_AFTER_FAILURE
+	# dasharo added BOOT_DEVICE_SUPPORTS_WRITES
+	# dasharo added SOC_AMD_COMMON as # workaround for BIOSRAM needed in amd_mtrr.c
 
 if SOUTHBRIDGE_NVIDIA_CK804
-
-config BOOTBLOCK_SOUTHBRIDGE_INIT
-	string
-	default "southbridge/nvidia/ck804/bootblock.c"
 
 config EHCI_BAR
 	hex
