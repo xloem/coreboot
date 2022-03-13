@@ -1,26 +1,3 @@
-/***
-* Immediate changes to migrate over:
-
-the bulk of the changes are splitting cache_as_ram into multiple public functions
-and removing the spinlocks.
-
-- [x] license is changed
-- [x] includes are changed
-- [x] DIMM defines are embedded
-- [x] spd_read_byte is removed
-- [x] spd_addr structures are moved down in file
-- [x] ht_speed_limit setting is moved into a special purpose function, mainboard_sysinfo_hook
-- [x] get_option(&storage, name) == SUCCESS ==>> transformed into get_uint_option(name, val)
-- [x] DIMMSetVoltage, reflowed, nvram removed, get_option transformed
-- [x] chunks of cache_as_ram_main are moved into mainboard_early_init
-- [x] other parts of cache_as_ram_main are moved into mainboard_spd_info
-- [x] execute_memory_test is undisabled
-- [x] further parts of cache_as_ram_main are moved into mainboard_after_raminit
-- [x] removed functions: spd_read_byte, romstage_console_lock, initialize_romstage_console_lock, romstage_nvram_cbfs_lock,
-                     initialize_romstage_nvram_cbfs_lock, romstage_microcode_cbfs_lock, initialize_romstage_microcode_cbfs_lock,
-                     cache_as_ram_main
-***/
-
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
 #include <stdint.h>
