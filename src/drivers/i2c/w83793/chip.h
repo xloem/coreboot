@@ -1,6 +1,12 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 
 struct drivers_i2c_w83793_config {
+	/* This additional parameter is migrated in from kgpe-d16. I don't believe it is used at this time.
+	 * Choose between server or workstation mode:
+	 * - [1] server - all fans full speed, manual mode fixed values, no temp mapping
+	 * - [0] workstation - set automatic mode per devicetree settings
+	 */
+	u8 server_manual_mode;
 	u8 mfc;
 	u8 fanin;
 	u8 fanin_sel;
