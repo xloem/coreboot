@@ -179,21 +179,38 @@ static const uint8_t spd_addr[] = {
 
 void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 {
+	// esp not cached
+	
 	struct sys_info *sysinfo = get_sysinfo();
 
-	u32 bsp_apicid = 0, val, wants_reset;
+	// ht_speed_limit not set
+
+	u32 bsp_apicid = 0, val, wants_reset; // wants_reset added
+	// byte, power_on_reset not used
 	msr_t msr;
 
+	// s3resume not used
+
+	// timestamps are outside cpu_init_detected instead of inside
 	timestamp_init(timestamp_get());
 	timestamp_add_now(TS_START_ROMSTAGE);
 
 	if (!cpu_init_detectedx && boot_cpu()) {
+		// no spinlocks inited
+
 		/* Nothing special needs to be done to find bus 0 */
 		/* Allow the HT devices to be found */
 		set_bsp_node_CHtExtNodeCfgEn();
 		enumerate_ht_chain();
+		// sio_setup added
 		sio_setup();
+
+		// no bridge initializations
+		// serial port initialization moved outside
+		// no LPC DMA support yet
 	}
+
+	// no esp spewing
 
 	post_code(0x30);
 
@@ -202,6 +219,7 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 
 	post_code(0x32);
 
+	// serial init moved down here
 	winbond_enable_serial(SERIAL_DEV, CONFIG_TTYS0_BASE);
 	console_init();
 
@@ -220,6 +238,9 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 	/* Setup sysinfo defaults */
 	set_sysinfo_in_ram(0);
 
+	// no sb7xx_51xx_decode_last_reset for power_on_reset
+
+	// no initialize_mca for power_on_reset
 	update_microcode(val);
 
 	post_code(0x33);
@@ -228,6 +249,7 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 	post_code(0x34);
 
 	amd_ht_init(sysinfo);
+	// no amd_ht_fixup
 	post_code(0x35);
 
 	/* Setup nodes PCI space and start core 0 AP init. */
@@ -235,8 +257,10 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 
 	/* Setup any mainboard PCI settings etc. */
 	setup_mb_resource_map();
+	// no initialize_mca for power_on_reset
 	post_code(0x36);
 
+	// more comments here
 	/* wait for all the APs core0 started by finalize_node_setup. */
 	/* FIXME: A bunch of cores are going to start output to serial at once.
 	 * It would be nice to fix up prink spinlocks for ROM XIP mode.
@@ -245,12 +269,19 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 	 */
 	wait_all_core0_started();
 
+	// no _early_setup
+
+	// LOGICAL_CPUS are moved _after_ SET_FIDVID
+
 	if (CONFIG(SET_FIDVID)) {
 		msr = rdmsr(MSR_COFVID_STS);
 		printk(BIOS_DEBUG, "\nBegin FIDVID MSR 0xc0010071 0x%08x 0x%08x\n", msr.hi, msr.lo);
 
+		// no enable_fid_change_on_sb
+
 		post_code(0x39);
 
+		// no preprocessor guards around these condition blocks
 		if (!warm_reset_detect(0)) {			// BSP is node 0
 			init_fidvid_bsp(bsp_apicid, sysinfo->nodes);
 		} else {
@@ -264,6 +295,8 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 		printk(BIOS_DEBUG, "End FIDVIDMSR 0xc0010071 0x%08x 0x%08x\n", msr.hi, msr.lo);
 	}
 
+	// LOGICAL_CPUS are moved _after_ SET_FIDVID
+
 	if (CONFIG(LOGICAL_CPUS)) {
 		/* Core0 on each node is configured. Now setup any additional cores. */
 		printk(BIOS_DEBUG, "start_other_cores()\n");
@@ -272,6 +305,7 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 		wait_all_other_cores_started(bsp_apicid);
 	}
 
+	// added ck804 call here
 	printk(BIOS_DEBUG, "set_ck804_base_unit_id()\n");
 	ck804_control(ctrl_conf_fix_pci_numbering, ARRAY_SIZE(ctrl_conf_fix_pci_numbering), CK804_BOARD_BOOT_BASE_UNIT_UID);
 
@@ -279,6 +313,7 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 
 	init_timer(); // Need to use TMICT to synconize FID/VID
 
+	// added setting wants_reset here from ck804
 	wants_reset = ck804_early_setup_x();
 
 	/* Reset for HT, FIDVID, PLL and errata changes to take affect. */
@@ -288,13 +323,20 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 		die("After soft_reset - shouldn't see this message!!!\n");
 	}
 
+	// added debug output for wants_reset
 	if (wants_reset) {
 		printk(BIOS_DEBUG, "ck804_early_setup_x wanted additional reset!\n");
 	}
 
+	// no sr4540_htinit_decl_and_enable_isochronous_link
+	// no DDR default memory voltage, lpc_stick_ctl, s3resume ddr3_voltage
+
+	// no peripheral control lines
+
 	post_code(0x3B);
 
 	/* It's the time to set ctrl in sysinfo now; */
+	// does not report sysinfo->nodes as if fill_mem_ctrl returned it
 	printk(BIOS_DEBUG, "fill_mem_ctrl()\n");
 	fill_mem_ctrl(sysinfo->nodes, sysinfo->ctrl, spd_addr);
 	post_code(0x3D);
@@ -317,17 +359,23 @@ void cache_as_ram_main(unsigned long bist, unsigned long cpu_init_detectedx)
 
 	raminit_amdmct(sysinfo);
 
+	// no execute_memory_test
+
+	// no s3resume handling
 	cbmem_initialize_empty();
 	post_code(0x41);
 
 	amdmct_cbmem_store_info(sysinfo);
 
 	printk(BIOS_DEBUG, "disable_spd()\n");
+	// changed spd_mux stuff to ck804
 	ck804_control(ctrl_conf_disable_spd, ARRAY_SIZE(ctrl_conf_disable_spd), CK804_DEVN_BASE);
 
+	// added msi_mapping instead of _before_pci_init
 	printk(BIOS_DEBUG, "enable_msi_mapping()\n");
 	ck804_control(ctrl_conf_enable_msi_mapping, ARRAY_SIZE(ctrl_conf_enable_msi_mapping), CK804_DEVN_BASE);
 
+	// changed pci_write_config16 for SP5100 GPIOs to pnp_write_config for SuperIO gpios
 	/* Initialize GPIO */
 	/* Access SuperIO GPI03 logical device */
 	pnp_enter_conf_state(GPIO3_DEV);
