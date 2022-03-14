@@ -5,6 +5,7 @@ bootblock-y += bootblock.c
 romstage-y += early_setup.c
 romstage-y += early_smbus.c
 
+ramstage-y += ht.c
 ramstage-y += reset.c
 ramstage-y += smbus.c
 
