@@ -1,56 +1,30 @@
-/*
- * This file is part of the coreboot project.
- *
- * (C) Copyright 2005 Stefan Reinauer <stepan@openbios.org>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
+/* SPDX-License-Identifier: GPL-2.0-only */
 
 /*
  * ACPI - create the Fixed ACPI Description Tables (FADT)
  */
 
-#include <string.h>
+#include <acpi/acpi.h>
 #include <console/console.h>
-#include <arch/acpi.h>
-#include <version.h>
+#include <cpu/x86/smm.h>
+#include <cpu/amd/common/common.h>
 
 extern unsigned int pm_base;	/* pm_base should be set in sb acpi */
 
-void acpi_create_fadt(acpi_fadt_t * fadt, acpi_facs_t * facs, void *dsdt)
+void acpi_fill_fadt(acpi_fadt_t * fadt)
 {
-	acpi_header_t *header = &(fadt->header);
-
-	printk(BIOS_DEBUG, "pm_base: 0x%04x\n", pm_base);
-
-	/* Prepare the header */
-	memset((void *)fadt, 0, sizeof(acpi_fadt_t));
-	memcpy(header->signature, "FACP", 4);
-	header->length = sizeof(acpi_fadt_t);
-	header->revision = get_acpi_table_revision(FADT);
-	memcpy(header->oem_id, OEM_ID, 6);
-	memcpy(header->oem_table_id, ACPI_TABLE_CREATOR, 8);
-	memcpy(header->asl_compiler_id, ASLC, 4);
-	header->asl_compiler_revision = asl_revision;
-
-	fadt->firmware_ctrl = (u32)facs;
-	fadt->dsdt = (u32)dsdt;
 	// 3=Workstation,4=Enterprise Server, 7=Performance Server
 	fadt->preferred_pm_profile = 0;
 	fadt->sci_int = 9;
 	// disable system management mode by setting to 0:
-	fadt->smi_cmd = 0;
-	fadt->acpi_enable = 0;
-	fadt->acpi_disable = 0;
-	fadt->s4bios_req = 0x0;
-	fadt->pstate_cnt = 0x0;
+	if (!CONFIG(HAVE_SMI_HANDLER))
+		fadt->smi_cmd = 0;
+	else
+		fadt->smi_cmd = APM_CNT;
+	fadt->acpi_enable = APM_CNT_ACPI_ENABLE;
+	fadt->acpi_disable = APM_CNT_ACPI_DISABLE;
+	fadt->s4bios_req = 0;
+	fadt->pstate_cnt = 0;
 
 	fadt->pm1a_evt_blk = pm_base;
 	fadt->pm1b_evt_blk = 0x0000;
@@ -79,24 +53,9 @@ void acpi_create_fadt(acpi_fadt_t * fadt, acpi_facs_t * facs, void *dsdt)
 	fadt->mon_alrm = 0x7e;
 	fadt->century = 0x32;
 	fadt->iapc_boot_arch = ACPI_FADT_LEGACY_FREE;
-	fadt->flags = 0xa5;
+	fadt->flags = 0xa5; // kgpe-d16 changed these to compiler defines. is this ACPI_FADT_WBINVD, ACPI_FADT_C1_SUPPORTED, and (1<<32) ?
 
 #ifdef LONG_FADT
-	fadt->res2 = 0;
-
-	fadt->reset_reg.space_id = 1;
-	fadt->reset_reg.bit_width = 8;
-	fadt->reset_reg.bit_offset = 0;
-	fadt->reset_reg.access_size = 0;
-	fadt->reset_reg.addrl = 0xcf9;
-	fadt->reset_reg.addrh = 0x0;
-
-	fadt->reset_value = 6;
-	fadt->x_firmware_ctl_l = facs;
-	fadt->x_firmware_ctl_h = 0;
-	fadt->x_dsdt_l = dsdt;
-	fadt->x_dsdt_h = 0;
-
 	fadt->x_pm1a_evt_blk.space_id = 1;
 	fadt->x_pm1a_evt_blk.bit_width = 32;
 	fadt->x_pm1a_evt_blk.bit_offset = 0;
@@ -153,5 +112,31 @@ void acpi_create_fadt(acpi_fadt_t * fadt, acpi_facs_t * facs, void *dsdt)
 	fadt->x_gpe1_blk.addrl = pm_base + 0xb0;
 	fadt->x_gpe1_blk.addrh = 0x0;
 #endif
-	header->checksum = acpi_checksum((void *)fadt, header->length);
 }
+
+#if CONFIG(HAVE_ACPI_TABLES)
+
+unsigned long acpi_fill_mcfg(unsigned long current)
+{
+	struct device *dev;
+	// i believe the updated sb700 code from kgpe-d16 uses a compile-time define rather than mcfg_base here
+	unsigned long mcfg_base;
+
+	dev = pcidev_on_root(0x0, 0);
+	if (!dev)
+		return current;
+
+	mcfg_base = pci_read_config16(dev, 0x90);
+	if ((mcfg_base & 0x1000) == 0)
+		return current;
+
+	mcfg_base = (mcfg_base & 0xf) << 28;
+
+	printk(BIOS_INFO, "mcfg_base %lx.\n", mcfg_base);
+
+	current += acpi_create_mcfg_mmconfig((acpi_mcfg_mmconfig_t *)
+			current, mcfg_base, 0x0, 0x0, 0xff);
+	return current;
+}
+
+#endif

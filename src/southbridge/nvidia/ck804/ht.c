@@ -1,39 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 
-#include <console/console.h>
 #include <device/device.h>
 #include <device/pci.h>
 #include <device/pci_ids.h>
 #include <device/pci_ops.h>
 #include <northbridge/amd/amdfam10/amdfam10.h>
 #include "chip.h"
-
-#if CONFIG(HAVE_ACPI_TABLES)
-
-unsigned long acpi_fill_mcfg(unsigned long current)
-{
-	struct device *dev;
-	// i believe the updated sb700 code from kgpe-d16 uses a compile-time define rather than mcfg_base here
-	unsigned long mcfg_base;
-
-	dev = pcidev_on_root(0x0, 0);
-	if (!dev)
-		return current;
-
-	mcfg_base = pci_read_config16(dev, 0x90);
-	if ((mcfg_base & 0x1000) == 0)
-		return current;
-
-	mcfg_base = (mcfg_base & 0xf) << 28;
-
-	printk(BIOS_INFO, "mcfg_base %lx.\n", mcfg_base);
-
-	current += acpi_create_mcfg_mmconfig((acpi_mcfg_mmconfig_t *)
-			current, mcfg_base, 0x0, 0x0, 0xff);
-	return current;
-}
-
-#endif
 
 static void ht_init(struct device *dev)
 {
