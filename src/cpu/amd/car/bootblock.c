@@ -46,9 +46,16 @@ asmlinkage void bootblock_c_entry_bist(uint64_t base_timestamp, uint32_t bist)
 		printk(BIOS_WARNING, "WARNING: Some dasharo code here was reverted just to see more build errors.");
 		console_init();
 		run_romstage();
+
 		//void (*ap_romstage_entry)(void) = get_ap_entry_ptr();
 		//ap_romstage_entry(); /* execution does not return */
-		//halt();
+		
+		//printk(BIOS_WARNING, "sysinfo range: [%p,%p]\n", get_sysinfo(), get_sysinfo() + 1);
+
+		//mainboard_sysinfo_hook(get_sysinfo());
+
+		//initialize_cores(get_sysinfo());
+		halt();
 	}
 
 	/* Call lib/bootblock.c main */

@@ -37,6 +37,7 @@ struct sys_info *get_sysinfo(void)
 	return &sysinfo;
 }
 
+/*
 static void ap_romstage_entry(void)
 {
 	printk(BIOS_WARNING, "sysinfo range: [%p,%p]\n", get_sysinfo(), get_sysinfo() + 1);
@@ -50,6 +51,7 @@ static void save_ap_romstage_ptr(void)
 {
 	save_bios_ram_data((u32)ap_romstage_entry, 4, BIOSRAM_AP_ENTRY);
 }
+*/
 
 void mainboard_romstage_entry(void)
 {
@@ -59,7 +61,7 @@ void mainboard_romstage_entry(void)
 	int cbmem_initted = 0;
 	struct postcar_frame pcf;
 
-	save_ap_romstage_ptr();
+	/*save_ap_romstage_ptr();*/
 
 	printk(BIOS_WARNING, "sysinfo range: [%p,%p]\n", get_sysinfo(), get_sysinfo() + 1);
 
