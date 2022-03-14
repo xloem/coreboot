@@ -1,15 +1,4 @@
-/*
- * This file is part of the coreboot project.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
+/* SPDX-License-Identifier: GPL-2.0-only */
 
 Device (LPCB) {
 	Name (_ADR, 0x00010000)
@@ -38,12 +27,12 @@ Name (PRSA, ResourceTemplate () {
 	IRQ(Level, ActiveLow, Shared) {5, 7, 10, 11}
 })
 Method (CRSA, 1, Serialized) {
-	Name (LRTL, ResourceTemplate() {
+	Store (ResourceTemplate() {
 		IRQ(Level, ActiveLow, Shared) {}
-	})
-	CreateWordField(LRTL, 1, LIRQ)
+	}, Local0)
+	CreateWordField(Local0, 1, LIRQ)
 	ShiftLeft(1, Arg0, LIRQ)
-	Return (LRTL)
+	Return (Local0)
 }
 Method (SRSA, 1, Serialized) {
 	CreateWordField(Arg0, 1, LIRQ)
@@ -59,10 +48,10 @@ Name (PRSB, ResourceTemplate () {
 	}
 })
 Method (CRSB, 1, Serialized) {
-	Name (LRTL, ResourceTemplate() {
+	Store (ResourceTemplate() {
 		Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,,) { 0 }
-	})
-	CreateDWordField (LRTL, 5, LIRQ)
+	}, Local0)
+	CreateDWordField (Local0, 5, LIRQ)
 	If (LEqual (Arg0, 8)) {
 		Store (16, LIRQ)
 	} ElseIf (LEqual (Arg0, 1)) {
@@ -74,7 +63,7 @@ Method (CRSB, 1, Serialized) {
 	} Else {
 		Store (0, LIRQ)
 	}
-	Return (LRTL)
+	Return (Local0)
 }
 Method (SRSB, 1, Serialized) {
 	CreateDWordField(Arg0, 5, LIRQ)
@@ -98,10 +87,10 @@ Name (PRSC, ResourceTemplate () {
 	}
 })
 Method (CRSC, 1, Serialized) {
-	Name (LRTL, ResourceTemplate() {
+	Store (ResourceTemplate() {
 		Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,,) { 0 }
-	})
-	CreateDWordField (LRTL, 5, LIRQ)
+	}, Local0)
+	CreateDWordField (Local0, 5, LIRQ)
 	If (LEqual (Arg0, 8)) {
 		Store (20, LIRQ)
 	} ElseIf (LEqual (Arg0, 13)) {
@@ -113,7 +102,7 @@ Method (CRSC, 1, Serialized) {
 	} Else {
 		Store (0, LIRQ)
 	}
-	Return (LRTL)
+	Return (Local0)
 }
 Method (SRSC, 1, Serialized) {
 	CreateDWordField(Arg0, 5, LIRQ)

@@ -1,21 +1,4 @@
-/*
- * This file is part of the coreboot project.
- *
- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
- * Copyright (C) 2005 - 2012 Advanced Micro Devices, Inc.
- * Copyright (C) 2007-2009 coresystems GmbH
- * Copyright (C) 2004 Nick Barker <Nick.Barker9@btinternet.com>
- * Copyright (C) 2007, 2008 Rudolf Marek <r.marek@assembler.cz>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
+/* SPDX-License-Identifier: GPL-2.0-only */
 
 /*
  * WARNING: Sleep/Wake is a work in progress and is still somewhat flaky!
@@ -30,7 +13,7 @@
  * PCI link routing templates taken from ck804.asl and modified for this board
  */
 
-#include <arch/acpi.h>
+#include <acpi/acpi.h>
 DefinitionBlock (
 		"DSDT.AML",	/* Output filename */
 		"DSDT",		/* Signature */
@@ -138,15 +121,11 @@ DefinitionBlock (
 			/* BUS0 root bus */
 
 			Name (_HID, EisaId ("PNP0A03"))
-			Name (_ADR, 0x00180001)
 			Name (_UID, 0x00)
 
 			Name (HCIN, 0x00)  // HC1
 
-			Method (_BBN, 0, NotSerialized)
-			{
-				Return (GBUS (GHCN(HCIN), GHCL(HCIN)))
-			}
+			Name (_BBN, CONFIG_CBB)
 
 			/* Operating System Capabilities Method */
 			Method(_OSC,4)
@@ -156,14 +135,12 @@ DefinitionBlock (
 			}
 
 			External (BUSN)
-			External (MMIO)
-			External (PCIO)
+			External (RSRC)
 			External (SBLK)
 			External (TOM1)
 			External (HCLK)
 			External (SBDN)
 			External (HCDN)
-			External (CBST)
 
 			/* PCI Routing Tables */
 			Name (PR00, Package () {
@@ -378,31 +355,7 @@ DefinitionBlock (
 
 			Method (_CRS, 0, Serialized)
 			{
-				Name (BUF0, ResourceTemplate ()
-				{
-					IO (Decode16,
-					0x0CF8,	// Address Range Minimum
-					0x0CF8,	// Address Range Maximum
-					0x01,	// Address Alignment
-					0x08,	// Address Length
-					)
-					WordIO (ResourceProducer, MinFixed, MaxFixed, PosDecode, EntireRange,
-					0x0000,	// Address Space Granularity
-					0x0000,	// Address Range Minimum
-					0x0CF7,	// Address Range Maximum
-					0x0000,	// Address Translation Offset
-					0x0CF8,	// Address Length
-					,, , TypeStatic)
-				})
-				/* Methods below use SSDT to get actual MMIO regs
-				   The IO ports are from 0xd00, optionally an VGA,
-				   otherwise the info from MMIO is used.
-				   \_SB.GXXX(node, link)
-				 */
-				Concatenate (\_SB.GMEM (0x00, \_SB.PCI0.SBLK), BUF0, Local1)
-				Concatenate (\_SB.GIOR (0x00, \_SB.PCI0.SBLK), Local1, Local2)
-				Concatenate (\_SB.GWBN (0x00, \_SB.PCI0.SBLK), Local2, Local3)
-				Return (Local3)
+				Return (\_SB.PCI0.RSRC)
 			}
 
 #include <southbridge/nvidia/ck804/acpi/ck804.asl>
@@ -799,7 +752,6 @@ DefinitionBlock (
 
 			Device (LPC) {
 				Name (_HID, EisaId ("PNP0A05"))
-				Name (_ADR, 0x00010000)
 
 				/* PS/2 keyboard (seems to be important for WinXP install) */
 				Device (KBD)
@@ -943,6 +895,6 @@ DefinitionBlock (
 		}
 	}
 
-#include "acpi/pm_ctrl.asl"
+/*#include "acpi/pm_ctrl.asl"*/
 
 }
