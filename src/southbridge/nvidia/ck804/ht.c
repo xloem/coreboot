@@ -13,6 +13,7 @@
 unsigned long acpi_fill_mcfg(unsigned long current)
 {
 	struct device *dev;
+	// i believe the updated sb700 code from kgpe-d16 uses a compile-time define rather than mcfg_base here
 	unsigned long mcfg_base;
 
 	dev = pcidev_on_root(0x0, 0);
