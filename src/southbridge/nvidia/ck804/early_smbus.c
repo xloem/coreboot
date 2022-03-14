@@ -7,6 +7,7 @@
 #include <device/pci.h>
 #include <device/pci_def.h>
 #include <device/pci_ids.h>
+#include <northbridge/amd/amdfam10/raminit.h>
 
 #include "smbus.h"
 #include "early_smbus.h"
@@ -60,4 +61,9 @@ int smbus_read_byte(unsigned int device, unsigned int address)
 int smbus_write_byte(unsigned int device, unsigned int address, unsigned char val)
 {
 	return ck804_smbus_write_byte(0, device, address, val);
+}
+
+int spd_read_byte(unsigned int device, unsigned int address)
+{
+	return smbus_read_byte(device, address);
 }
