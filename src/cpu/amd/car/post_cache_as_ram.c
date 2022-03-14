@@ -128,7 +128,7 @@ asmlinkage void cache_as_ram_new_stack(void)
 	set_sysinfo_in_ram(1); // So other core0 could start to train mem
 
 	/*copy and execute ramstage */
-	copy_and_run();
+	run_ramstage();
 	/* We will not return */
 
 	print_car_debug("should not be here -\n");
