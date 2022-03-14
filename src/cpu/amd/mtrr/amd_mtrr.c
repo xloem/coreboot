@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 
-#include <amdblocks/biosram.h>
+//#include <amdblocks/biosram.h>
 #include <console/console.h>
 #include <device/device.h>
 #include <arch/cpu.h>
@@ -70,7 +70,7 @@ static void setup_ap_ramtop(void)
 void add_uma_resource_below_tolm(struct device *nb, int idx)
 {
 	uint32_t topmem = bsp_topmem();
-	uint32_t top_of_cacheable = restore_top_of_low_cacheable();
+	uint32_t top_of_cacheable = 0;//restore_top_of_low_cacheable();
 
 	if (top_of_cacheable == topmem)
 		return;
