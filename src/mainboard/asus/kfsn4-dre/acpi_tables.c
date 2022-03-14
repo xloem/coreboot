@@ -2,21 +2,23 @@
 
 #include <assert.h>
 #include <acpi/acpi.h>
+#include <device/pci_def.h>
 #include <device/pci_ops.h>
 #include <arch/smp/mpspec.h>
-#include <device/pci_ops.h>
+#include <northbridge/amd/amdfam10/amdfam10.h>
 
 /* APIC */
 unsigned long acpi_fill_madt(unsigned long current)
 {
 	struct device *dev;
 	struct resource *res;
+	struct amdfam10_sysconf_t *sysconf = get_sysconf();
 
 	/* create all subtables for processors */
 	current = acpi_create_madt_lapics(current);
 
 	/* Write NVIDIA CK804 IOAPIC. */
-	dev = pcidev_on_root(sysconf.sbdn + 0x1, 0);
+	dev = pcidev_on_root(sysconf->sbdn + 0x1, 0);
 	ASSERT(dev != NULL);
 
 	res = find_resource(dev, PCI_BASE_ADDRESS_1);
