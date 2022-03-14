@@ -25,4 +25,11 @@ void enable_fid_change_on_sb(unsigned int sbbusn, unsigned int sbdn);
 void ck804_control(const unsigned int *values, u32 size,
 			  uint8_t bus_unit_id);
 
+/**
+ * @brief Get SouthBridge device number
+ * @param[in] bus target bus number
+ * @return southbridge device number
+ */
+unsigned int get_sbdn(unsigned int bus);
+
 #endif
