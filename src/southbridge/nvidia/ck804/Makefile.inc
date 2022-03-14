@@ -5,6 +5,8 @@ bootblock-y += bootblock.c
 romstage-y += early_setup.c
 romstage-y += early_smbus.c
 
+postcar-y += reset.c
+
 ramstage-y += acpi.c
 ramstage-y += ck804.c
 ramstage-y += ht.c
