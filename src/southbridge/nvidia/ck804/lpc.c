@@ -1,23 +1,9 @@
-/*
- * This file is part of the coreboot project.
- *
- * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
- * Copyright (C) 2003 Linux Networx
- * Copyright (C) 2003 SuSE Linux AG
- * Copyright (C) 2004 Tyan Computer
- * Written by Yinghai Lu <yhlu@tyan.com> for Tyan Computer.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
+/* SPDX-License-Identifier: GPL-2.0-only */
 
+#include <acpi/acpi.h>
+#include <arch/ioapic.h>
 #include <console/console.h>
+#include <cpu/amd/powernow.h>
 #include <device/device.h>
 #include <device/pci.h>
 #include <device/pnp.h>
@@ -26,12 +12,11 @@
 #include <pc80/mc146818rtc.h>
 #include <pc80/isa-dma.h>
 #include <arch/io.h>
-#include <arch/ioapic.h>
-#include <arch/acpi.h>
 #include <cpu/x86/lapic.h>
+#include <option.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <cpu/amd/powernow.h>
+
 #include "chip.h"
 
 #define NMI_OFF 0
@@ -110,8 +95,7 @@ static void lpc_init(struct device *dev)
 	printk(BIOS_INFO, "%s: pm_base = %x\n", __func__, pm_base);
 
 	/* Power after power fail */
-	on = CONFIG_MAINBOARD_POWER_FAILURE_STATE;
-	get_option(&on, "power_on_after_fail");
+	on = get_uint_option("power_on_after_fail", CONFIG_MAINBOARD_POWER_FAILURE_STATE);
 	byte = pci_read_config8(dev, PREVIOUS_POWER_STATE);
 	byte &= ~0x45;
 	if (!on)
@@ -120,8 +104,7 @@ static void lpc_init(struct device *dev)
 	printk(BIOS_INFO, "set power %s after power fail\n", on ? "on" : "off");
 
 	/* Throttle the CPU speed down for testing. */
-	on = SLOW_CPU_OFF;
-	get_option(&on, "slow_cpu");
+	on = get_uint_option("slow_cpu", SLOW_CPU_OFF);
 	if (on) {
 		u16 pm10_bar;
 		pm10_bar = (pci_read_config16(dev, 0x60) & 0xff00);
@@ -135,8 +118,7 @@ static void lpc_init(struct device *dev)
 	/* Set up NMI on errors. */
 	byte = inb(0x70);		/* RTC70 */
 	byte_old = byte;
-	nmi_option = NMI_OFF;
-	get_option(&nmi_option, "nmi");
+	nmi_option = get_uint_option("nmi", NMI_OFF);
 	if (nmi_option)
 		byte &= ~(1 << 7); /* Set NMI. */
 	else
@@ -168,7 +150,9 @@ static void ck804_lpc_read_resources(struct device *dev)
 	/* Get resource for ACPI, SYSTEM_CONTROL, ANALOG_CONTROL. */
 	for (index = 0x60; index <= 0x68; index += 4)	/* We got another 3. */
 		pci_get_resource(dev, index);
-	compact_resources(dev);
+
+	// kgpe-d16 added here a mask for ranges outside 0-0x1000
+	printk(BIOS_DEBUG, "mask for ranges outside 0-0x1000 not added");
 
 	/* Add an extra subtractive resource for both memory and I/O. */
 	res = new_resource(dev, IOINDEX_SUBTRACTIVE(0, 0));
@@ -177,11 +161,15 @@ static void ck804_lpc_read_resources(struct device *dev)
 	res->flags = IORESOURCE_IO | IORESOURCE_SUBTRACTIVE |
 		     IORESOURCE_ASSIGNED | IORESOURCE_FIXED;
 
+	/* Flash */
 	res = new_resource(dev, IOINDEX_SUBTRACTIVE(1, 0));
-	res->base = 0xff800000;
-	res->size = 0x00800000; /* 8 MB for flash */
-	res->flags = IORESOURCE_MEM | IORESOURCE_SUBTRACTIVE |
-		     IORESOURCE_ASSIGNED | IORESOURCE_FIXED;
+	res->base = 4ull * GiB - CONFIG_ROM_SIZE;
+	res->size = CONFIG_ROM_SIZE;
+	res->flags = IORESOURCE_MEM | IORESOURCE_ASSIGNED | IORESOURCE_FIXED |
+		     IORESOURCE_STORED | IORESOURCE_RESERVE;
+
+	// kgpe-d16 here had a resource creation associated with SPI BAR and SPI_BASE_ADDRESS
+	printk(BIOS_DEBUG, "new resource calls not added");
 
 	if (dev->device != PCI_DEVICE_ID_NVIDIA_CK804_SLAVE) {
 		res = find_resource(dev, PCI_BASE_ADDRESS_1); /* IOAPIC */
@@ -196,10 +184,13 @@ static void ck804_lpc_read_resources(struct device *dev)
 			res->flags |= IORESOURCE_ASSIGNED | IORESOURCE_FIXED;
 		}
 	}
+	compact_resources(dev);
 }
 
 static void ck804_lpc_set_resources(struct device *dev)
 {
+	// kgpe-d16 mutated this function away
+	printk(BIOS_DEBUG, "wrapper for pci_dev_set_resources engages APIC, HPET");
 	u8 byte;
 	struct resource *res;
 
@@ -254,6 +245,8 @@ static void ck804_lpc_enable_childrens_resources(struct device *dev)
 					base = res->base;
 					end = resource_end(res);
 					printk(BIOS_DEBUG, "ck804 lpc decode:%s, base=0x%08lx, end=0x%08lx\n", dev_path(child), base, end);
+					if (end >= 0x1000)
+						die("IO ports of 0-0x1000 range enabled in LPC ISA bridge (new assertion from kgpe-d16)\n");
 					switch (base) {
 					case 0x3f8:	// COM1
 						reg |= (1 << 0);
@@ -298,7 +291,7 @@ static void ck804_lpc_enable_resources(struct device *dev)
 
 #if CONFIG(HAVE_ACPI_TABLES)
 
-static void southbridge_acpi_fill_ssdt_generator(struct device *device)
+static void southbridge_acpi_fill_ssdt(const struct device *device)
 {
 	amd_generate_powernow(0, 0, 0);
 }
@@ -310,7 +303,7 @@ static struct device_operations lpc_ops = {
 	.set_resources    = ck804_lpc_set_resources,
 	.enable_resources = ck804_lpc_enable_resources,
 #if CONFIG(HAVE_ACPI_TABLES)
-	.acpi_fill_ssdt_generator = southbridge_acpi_fill_ssdt_generator,
+	.acpi_fill_ssdt = southbridge_acpi_fill_ssdt,
 	.write_acpi_tables      = acpi_write_hpet,
 #endif
 	.init             = lpc_init,
