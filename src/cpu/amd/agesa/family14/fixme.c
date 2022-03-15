@@ -65,39 +65,6 @@ void amd_initcpuio(void)
 	LibAmdPciWrite(AccessWidth32, PciAddress, &PciData, &StdHeader);
 }
 
-void amd_initmmio(void)
-{
-	UINT64 MsrReg;
-	UINT32 PciData;
-	PCI_ADDR PciAddress;
-	AMD_CONFIG_PARAMS StdHeader;
-
-	/*
-	   Set the MMIO Configuration Base Address and Bus Range onto MMIO configuration base
-	   Address MSR register.
-	 */
-	MsrReg = CONFIG_MMCONF_BASE_ADDRESS | (LibAmdBitScanReverse(CONFIG_MMCONF_BUS_NUMBER) << 2) | 1;
-	LibAmdMsrWrite(MMIO_CONF_BASE, &MsrReg, &StdHeader);
-
-	/* Set Ontario Link Data */
-	PciAddress.AddressValue = MAKE_SBDFO(0, 0, 0, 0, 0xE0);
-	PciData = 0x01308002;
-	LibAmdPciWrite(AccessWidth32, PciAddress, &PciData, &StdHeader);
-	PciAddress.AddressValue = MAKE_SBDFO(0, 0, 0, 0, 0xE4);
-	PciData = (AMD_APU_SSID << 0x10) | AMD_APU_SVID;
-	LibAmdPciWrite(AccessWidth32, PciAddress, &PciData, &StdHeader);
-
-	/* Set ROM cache onto WP to decrease post time */
-	MsrReg = (0x0100000000ull - CACHE_ROM_SIZE) | MTRR_TYPE_WRPROT;
-	LibAmdMsrWrite(MTRR_PHYS_BASE(6), &MsrReg, &StdHeader);
-	MsrReg = ((1ULL << CONFIG_CPU_ADDR_BITS) - CACHE_ROM_SIZE) | MTRR_PHYS_MASK_VALID;
-	LibAmdMsrWrite(MTRR_PHYS_MASK(6), &MsrReg, &StdHeader);
-
-	/* Set P-state 0 (1600 MHz) early to save a few ms of boot time */
-	MsrReg = 0;
-	LibAmdMsrWrite(PS_CTL_REG, &MsrReg, &StdHeader);
-}
-
 void amd_initenv(void)
 {
 	AMD_INTERFACE_PARAMS AmdParamStruct;
