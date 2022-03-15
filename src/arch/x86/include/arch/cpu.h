@@ -210,7 +210,8 @@ int cpu_have_cpuid(void);
 
 static inline bool cpu_is_amd(void)
 {
-	return CONFIG(CPU_AMD_AGESA) || CONFIG(CPU_AMD_PI) || CONFIG(SOC_AMD_COMMON);
+	return CONFIG(CPU_AMD_AGESA) || CONFIG(CPU_AMD_PI)
+			|| CONFIG(SOC_AMD_COMMON) || CONFIG(CPU_AMD_MODEL_10XXX);
 }
 
 static inline bool cpu_is_intel(void)
