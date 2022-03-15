@@ -40,6 +40,7 @@
 #include <northbridge/amd/amdht/ht_wrapper.h>
 #include <northbridge/amd/amdfam10/raminit.h>
 #include <cpu/amd/family_10h-family_15h/init_cpus.h>
+#include <smp/node.h> /* for boot_cpu() */
 
 #include "cpu/amd/quadcore/quadcore.c"
 
