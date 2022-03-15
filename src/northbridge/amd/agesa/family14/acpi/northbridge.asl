@@ -127,5 +127,5 @@ Device(PE23) {
 Device(NBF3) {
 
 	/* k10temp thermal zone */
-	#include "thermal_mixin.asl"
+	#include <northbridge/amd/amdfam10/thermal_mixin.asl>
 } /* end NBF3 */
