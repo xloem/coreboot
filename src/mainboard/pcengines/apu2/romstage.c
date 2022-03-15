@@ -21,6 +21,7 @@
 #include <arch/cpu.h>
 #include <cpu/x86/lapic.h>
 #include <console/console.h>
+#include <cpu/amd/car.h>
 #include <northbridge/amd/agesa/state_machine.h>
 #include <southbridge/amd/pi/hudson/hudson.h>
 #include <superio/nuvoton/common/nuvoton.h>
