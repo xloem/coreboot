@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+#include <arch/early_variables.h>
 #include <commonlib/helpers.h>
 #include <console/console.h>
 #include <console/uart.h>
@@ -23,12 +24,12 @@
 /* Mutable console log level only allowed when RAM comes online. */
 #define CONSOLE_LEVEL_CONST !ENV_STAGE_HAS_DATA_SECTION
 
-static int console_inited;
+static int console_inited CAR_GLOBAL;
 static int console_loglevel = CONFIG_DEFAULT_CONSOLE_LOGLEVEL;
 
 static inline int get_log_level(void)
 {
-	if (console_inited == 0)
+	if (car_get_var(console_inited) == 0)
 		return -1;
 	if (CONSOLE_LEVEL_CONST)
 		return get_console_loglevel();
@@ -77,14 +78,14 @@ asmlinkage void console_init(void)
 	init_log_level();
 
 	if (CONFIG(DEBUG_CONSOLE_INIT))
-		console_inited = 1;
+		car_set_var(console_inited, 1);
 
 	if (CONFIG(EARLY_PCI_BRIDGE) && !ENV_SMM && !ENV_RAMSTAGE)
 		pci_early_bridge_init();
 
 	console_hw_init();
 
-	console_inited = 1;
+	car_set_var(console_inited, 1);
 
 	printk(BIOS_NOTICE, "\n\ncoreboot-%s%s %s " ENV_STRING " starting (log level: %i)...\n",
 	       coreboot_version, coreboot_extra_version, coreboot_build,
