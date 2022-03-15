@@ -11,4 +11,6 @@ void disable_cache_as_ram(void);
 
 void *asmlinkage romstage_main(unsigned long bist);
 
+asmlinkage void romstage_main(unsigned long bist);
+
 #endif
