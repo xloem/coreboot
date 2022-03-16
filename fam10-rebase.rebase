@@ -1,0 +1,619 @@
+#!/usr/bin/env bash
+
+EDITOR=tee git rebase -i f2e42c4a8e^ <<EOF
+
+drop f2e42c4a8e mb/*/*: Drop AMDFAM10 mainboards
+pick b274ccf596 sb/amd/amd8111: Remove support
+pick 979d4ce02f sb/amd/amd8132: Drop support
+pick ecebee0561 sb/amd/rs780: Drop support
+pick 24284270c7 sb/amd/sb700: Drop support
+pick 334699d205 mb/*/*: Use proper header for pm_iowrite()
+pick 57803ba3f5 sb/amd/sb800: Drop support
+pick fc20682f07 sb/amd/sr5650: Drop support
+pick 4c9bbb9b34 sb/broadcom/bcm5785: Drop support
+pick 87bc755447 sb/broadcom/bcm21000: Drop support
+drop 185691eedb sb/nvidia/ck804: Drop support
+pick 1ca978ee65 sb/nvidia/mcp55: Drop support
+drop ffcac3eb50 nb/amd/fam10: Drop support
+pick 6059c9d133 Documentation/releases: Drop reference to piratenpad
+pick bc29bd0de6 device: Add back dummy HT_CHAIN_UNITID_BASE
+pick 298619f6d9 mb/*/*: Drop Intel Rangeley mainboards
+pick c2c634a089 nb/sb/cpu: Drop Intel Rangeley support
+pick eb5147027e mb/*/*: Drop FSP_BAYTRAIL support
+pick d980211112 soc/intel/fsp_baytrail: Drop support
+pick 433471244b mb/*/*: Remove BROADWELL_DE boards
+pick f67c81fc70 soc/intel/fsp_broadwell_de: Drop support
+pick 15c012181d drivers/intel/fsp1_0: Drop support
+pick 181de282b5 Kconfig: Remove not found sources
+pick eef63607b8 cpu/x86/lapic/lapic_cpu_init.c: Drop unused guards
+drop de56a66e73 cpu/amd/fam10: Drop support
+pick 7715c0dea7 MAINTAINERS: Remove unsupported AMD platforms
+pick baa16e9c25 drivers/pc80/tpm: Replace __RAMSTAGE_ guards
+pick 35a047c4e5 drivers/crb: Replace __RAMSTAGE_ guards
+exec git cherry-pick af407a87e85b191387e7546f2ce0d6dd9dfdffad
+pick 79ca4b55c5 arch/x86: Remove copy_and_run()
+drop bd585fa89f device/pci: Reduce scope of dev_find_slot()
+drop 3382e53c64 cpu/amd/microcode: Remove microcode update routine
+pick 9bb16cd9c5 drivers/pc80/rtc: Remove CMOS spinlock
+pick f8dc4bc022 arch/x86: Remove spinlocks inside CAR
+pick 56715ec23f soc/intel/skylake: Refactor pch_early_init() code
+pick 75396f67aa Makefiles: Remove -D__PRE_RAM__
+pick f5c0d61296 intel/smm: Provide common smm_relocation_params
+pick 490eab46a8 arch/acpigen.h: Correct PARENT_PREFIX encoding value
+pick 9ea4c8a71e util/xcompile: Only use -Wno-address-of-packed-member if supported
+pick 386d3418ef mb/lenovo/{x201,x60}/smihandler: Use mdelay instead of udelay for large values
+pick 45ecb0eba1 purism/librem_skl: add/use VBT file
+pick 5015502414 src/drivers/ipmi: Implement BMC Get Self Test Result function
+pick 61e3d01739 MAINTAINERS: Remove FSP1.0 and boards using it
+pick 5a0edcbde1 mb/google/hatch/variant/kohaku: Config MEM_STRAP GPIOs
+pick 07b402b3b9 mb/lenovo/t410: Fix I2C SPD address
+drop eb2e0b56ee device/hypertransport: Drop unused code
+pick 06f2fcc0ff cpu/x86/smm: Use PRIxPTR to print uintptr_t
+pick 7aeeb9bf96 soc/intel/common/intelblocks: Define PAD_CFG0_MODE_NF7
+pick 53509cf15a drivers/ipmi: Add IPMI get system GUID support
+pick 94146009a1 soc/intel/icelake: Make CpuMpPpi implementation default for ICL
+pick 7f8b0cd89c sb/i82801ix: Use macros instead of hard-coded IDs
+pick 1818733faa cpu/intel/smm: Drop em64t save state
+pick 4debbe74ac cpu/intel/gen1/smmrelocate: Fix stale comment
+pick d5e7a6d9c5 sb/intel/ibexpeak: Decode more LPC IO ranges
+pick 540b2adb61 src/console: Bring back support for printf'ing 64bit ints
+pick d198e2e553 util/release: Make signing with GPG 2 easier
+pick 54cabb977d util/release: Try reusing the local checkout for cloning
+pick 85678b8419 util/release: Refactor blobs list
+pick eb80e053b6 Documentation/releases: Update checklist
+pick d653e491e1 util/release: always remove temporary files
+pick 1916d68ee3 util/release: Convert board IDs into human readable names
+pick 436296b9bd util/release: Don't wildly rename Makefiles
+pick 1bdfe8c280 qualcomm: qgpt: Fixes for python3
+pick d0c52b72f3 mb/google/kahlee/treeya: Set touchpad hold time to 400ns
+pick 0df1cccc0a vendorcode/amd/pi/Makefile.inc: remove -fno-zero-initialized-in-bss
+pick 27cb3e0d31 soc/amd: Move SCI enable outside table creation
+pick f3758b6738 AGESA,binaryPI: Move SCI enable outside table creation
+drop 0bb83469ed Kconfig: comply to Linux 5.3's Kconfig language rules
+
+# this is basically a merge of 0bb83469ed, not sure what i did wrong, maybe need to use 'merge' to make it
+exec git cherry-pick 2123d5d454489c74a77136fb50f8a18f04c4de4f
+
+pick d64b04609d util/ifdtool: Add Jasperlake platform support under IFDv2
+pick 21c9aa125c sb/intel/i82801ix: Update comment on default decoded IO ranges
+pick cc6809c8b1 mb/google/octopus: disable fmap cache for all octopus devices
+pick 878b685814 soc/intel/broadwell: Fix 'dead increment'
+drop 689256797e Drop superfluous C_ENVIRONMENT_BOOTBLOCK checks
+exec git cherry-pick df3c3c6c9f87242e2a7f5ad11106d18347842927
+pick c05b1a66b3 Kconfig: Drop the C_ENVIRONMENT_BOOTBLOCK symbol
+pick df0c731e68 mb/Kconfig: Add a warning on boards with a ROMCC_BOOTLOCK
+pick 1fa240a3c5 cpu/intel/slot_1: Move to C_ENVIRONMENT_BOOTBLOCK
+pick e719288a3c binaryPI: Use Kconfig to define the number of IOAPICs
+pick 9367d91e22 hatch: Enable EC sync in romstage
+pick 2c3d91c9c8 soc/intel/tigerlake: Add Jasperlake soc Kconfig
+pick a9b1a72a8f binaryPI: Remove FieldAccessors.[ch]
+pick 2b297d92a7 mb/samsung: remove header guards for SuperIO
+pick c61d415701 util/sconfig: Fix illogical override rule for resource
+pick 8d82109c08 nb/intel/sandybridge: Fix mrc.bin path
+pick 2ed6848ea3 soc/amd/exit_car.S: Drop redundant enabling cache
+pick 515ef38db4 arch/x86: SMBIOS: Improve core count reporting
+pick 3397ef9627 soc/nvidia/tegra: Remove duplicate macros
+pick a3eb125238 security/vboot: Remove duplicate offsetof() definition
+pick 47a6603f34 sb/intel/common/spi: Add Baytrail/Braswell support
+pick 026863b2ff southbridge/intel/common/spi.c: Define __SIMPLE_DEVICE__
+pick 433acc2d3d soc/mediatek/mt8183: disable BBLPM of DCXO core
+pick e1470ea6a3 soc/intel/cannonlake: Add chip config to override CPU flex ratio
+pick 0d2dbcab5f amd/pi/00730F01: Add support without BINARYPI_LEGACY_WRAPPER
+pick 24ab1c5db6 soc/intel/{apl,cnl,dnv,skl}: Skip ucode loading by FSP-T
+pick a4f5954159 util/release: Add amd_blobs to blob list
+pick 91709c91df .gitignore: Add pmh7tool binary
+drop 6a23352515 amdfam10: Clean leftover prototypes
+pick f77f2c79c2 pcengines/apu2: Switch away from BINARYPI_LEGACY_WRAPPER
+pick a0a50775c2 binaryPI: Disable boards from build
+pick b81731d9db binaryPI: Drop S3_DATA_POS and S3_DATA_SIZE
+pick 46f04cbb49 binaryPI: Drop BINARYPI_LEGACY_WRAPPER support
+pick 56397364c9 binaryPI: Drop CAR teardown without POSTCAR_STAGE
+pick 9266ce90c6 AGESA,binaryPI: Remove early_all_cores()
+pick 18ecdbfeb8 crossgcc: Update binutils to version 2.33.1
+pick 2368681c83 crossgcc: Upgrade GDB to version 8.3.1
+pick 33847db3ce crossgcc: Upgrade Python to version 3.8.0
+pick a2fbddfabc crossgcc: Upgrade Expat to version 2.2.9
+pick 18315db8e0 crossgcc: Upgrade CMake to 3.16.0
+pick 3ba84c5950 crossgcc: Upgrade LLVM to version 9.0.0
+pick a2ac3ad5e5 google/glados: add libgfxinit support
+pick 64dc5c1d53 google/fizz: add libgfxinit support
+pick 8cfffb4427 google/eve: add libgfxinit support
+pick 7ad1a34ea7 google/beltino: add libgfxinit support
+pick 941796a50d google/jecht: add libgfxinit support
+pick 4ff63d3a11 soc/skylake: Write the P2SB IBDF and HBDF registers in coreboot
+pick b48d63359b soc/intel/baytrail: Use sb/intel/common/spi.c
+pick 7d802a48f3 soc/intel/baytrail: Don't reinitialize SPI after lockdown
+pick b0f15f0f86 soc/intel/tigerlake: Fix smm_relocation_params
+pick d367503147 soc/intel/cannonlake: Disable USB2 PHY Power gating
+pick 65a8c2e076 soc/intel/skylake: Clean up report_cpu_info() function
+pick 3ac0ab524b soc/amd/stoneyridge: Add selectable packages
+pick 12294d0c48 soc/amd/stoneyridge: Add selectable APU names
+pick c7fc199f40 cr50 i2c: add error message reporting TPM IRQ timeout
+pick d492f01bf1 mb/google/hatch/var/kindred: Add ELAN touchscreen support
+pick 3e8ef1028d util/kconfig: Move coreboot specific changes into Makefile.inc
+pick d618aaceae security/vboot: Use persistent context to read GBB flags
+pick 693e04f5c6 arch/arm/include: Remove unused armv7 types.h
+pick 7b3e8730ee soc/intel/skl: Drop FSP_CAR remnants
+pick c4b7ad4db5 util/release: Don't try to remove a file named like a long string
+pick 6572fe538a Documentation: Rework staging and commit information
+pick 282171c105 mainboard/google: Remove unused include <stdlib.h>
+pick c9ece506e0 pci_ids: Update Intel Lewisburg SMBUS PCI ID
+pick 5c44c4ac7d libpayload: Add BIT(x) macro definition
+pick 9f5c895ec7 mb/*/*/Kconfig: Drop redundant redeclaration of MAINBOARD_VENDOR
+pick c9eae795d1 soc/amd/common: Fix indirect includes
+pick c2a05d143b soc/intel/tigerlake: select correct chipset based on soc Kconfig
+pick b6e3618138 soc/amd/common: Remove guards on ACPIMMIO utils
+pick 30da30c1db mb/lenovo/t400/Kconfig: Remove default data.vbt path
+pick bf5aacca2c mb/lenovo/t400/Makefile: Build gpio w/o subdir makefiles
+pick ed50d85576 drivers/smmstore: Fix some issues
+pick b52cc0e094 Documentation: Add SMMSTORE documentation
+pick c1abf137ff Documentation/4.12-relnotes.md: Add SMMSTORE as production ready
+pick f3db2aea85 sb/amd/{agesa,pi}/hudson: enable support for AMD common ACPIMMIO blocks
+pick a3ce27d3dd cpu/amd/{agesa,pi}/Kconfig: select SSE2
+pick fba9f33187 mainboard/google/kahlee: add G2 TS support for careena
+pick b6c9a5d797 vendorcode/siemens/hwilib: Drop CAR_GLOBAL_MIGRATION
+pick 5b0db35e0d vendorcode/siemens/hwilib: Fix current file string usage
+pick 7255610d9f sb/intel/spi: Drop CAR_GLOBAL_MIGRATION
+pick 344e86bb3b security/vboot: Drop CAR_GLOBAL_MIGRATION support
+pick 0ca944b16f security/tpm: Drop CAR_GLOBAL_MIGRATION support
+drop 1a71163675 lib/timestamp.c: Drop CAR_GLOBAL_MIGRATION support
+pick f0664cfc7b lib/spd_bin.c: Drop CAR_GLOBAL_MIGRATION support
+drop dba22d2f9d lib/fmap.c: Drop CAR_GLOBAL_MIGRATION support
+pick 95b3f286a8 ec/google/chromeec: Drop CAR_GLOBAL_MIGRATION support
+pick 7c2fd97c05 drivers/vpd/vpd.c: Drop CAR_GLOBAL_MIGRATION support
+pick 2b77881564 drivers/usb/ehci_debug.c: Drop CAR_GLOBAL_MIGRATION support
+pick 5fadb46b36 drivers/uart/oxpcie_early.c: Drop CAR_GLOBAL_MIGRATION support
+pick c2a9c42670 drivers/spi/spi_flash.c: Drop CAR_GLOBAL_MIGRATION support
+pick 22be29e23b drivers/pc80/pc/i8254.c: Drop CAR_GLOBAL_MIGRATION support
+drop 48ae50c3d2 console/init.c: Drop CAR_GLOBAL_MIGRATION support
+pick 9e1ea54b18 arch/x86/exception.c: Drop CAR_GLOBAL_MIGRATION support
+pick 4e223db66c cpu/x86/tsc/delay_tsc.c: Drop CAR_GLOBAL_MIGRATION support
+pick 5d70978920 cpu/x86/lapic/apic_timer.c: Drop CAR_GLOBAL_MIGRATION support
+pick eb501f0543 commonlib/storage/pci_sdhci.c: Drop CAR_GLOBAL_MIGRATION support
+pick ff168e9e63 drivers/amd/agesa/def_callouts.c: Drop CAR_GLOBAL_MIGRATION support
+pick 7c2994bb73 lib/*_stage_cache.c: drop CAR_GLOBAL_MIGRATION support
+pick 2d33c3e6c3 drivers/elog/elog.c: Drop CAR_GLOBAL_MIGRATION support
+pick 56d913eedb soc/intel/braswell: Use sb/intel/common/spi.c
+pick 91eb2816fa soc/intel/braswell: Don't reinitialize SPI after lockdown
+pick d20b0a842b drivers/spi/boot_device_rw_nommap.c: Drop CAR_GLOBAL_MIGRATION support
+drop 462a7daeec lib/imd_cbmem.c: Drop CAR_GLOBAL_MIGRATION support
+pick 6229cc93ff cpu/intel/common/fsb.c: Drop CAR_GLOBAL_MIGRATION support
+pick 179da7fb5c soc/intel/baytrail: Move to C_ENVIRONMENT_BOOTBLOCK
+pick 0178760867 {northbridge,soc,southbridge}: Don't use both of _ADR and _HID
+pick 547de69de7 crossgcc: Upgrade acpica to version 20191018
+pick 34ac1ab4a3 AGESA,binaryPI: Flag boards with ROMCC_BOOTBLOCK
+
+drop aeb85d53e9 binaryPI: Clean leftover romstage prototype
+# should be merge
+exec git cherry-pick fdb0f39613 # binaryPI: Clean leftover romstage prototype
+
+pick ce51d6d9d1 binaryPI boards: Remove BIST reporting
+
+# should be a merge
+drop dc34a9d6de AGESA,binaryPI: Split romstage_main() to BSP and AP parts
+exec git cherry-pick de38fd20bf # AGESA,binaryPI: Split romstage_main() to BSP and AP parts
+
+pick 9b71804e4f AGESA,binaryPI: Remove BIST reporting in romstage
+pick c574947223 AGESA,binaryPI: Remove redundant SSE enable
+pick 2fa1cb15de AGESA,binaryPI: Remove __x86_64__ long mode in CAR
+pick 3aa17f7604 AGESA,binaryPI: Fix stack location on entry to romstage
+
+# should be merge i guess
+drop 33d0fb8d34 AGESA,binaryPI: Add compatibility wrapper for romstage entry
+exec git cherry-pick 34b292e09cf1511e5091dcf2c53dbd75836f0e03 # AGESA,binaryPI: Add compatibility wrapper for romstage entry
+
+pick 2c2df5b6dd src/drivers: Fix two issues discovered by checkpatch
+pick 3802563bdc cpu/x86/tsc: Remove indirection when accessing mono_timer_g
+drop c0a4e20887 lib/cbmem_console.c: Drop CAR_GLOBAL_MIGRATION support
+pick 6ea3a13a17 drivers/spi/flashconsole.c: Drop CAR_GLOBAL_MIGRATION support
+pick 706251d913 arch/x86/cache.h: Use ENV_CACHE_AS_RAM macro
+drop 1b8df77ac1 arch/*/*/early_variables.h: drop unused files
+drop fdb8b13e64 arch/x86/car.ld: Drop CAR_GLOBAL region
+drop 8601afb679 kill CAR_GLOBAL_MIGRATION leftovers
+pick bc2204edd2 util/pgtblgen: Fix typo
+drop cd666d992d lib/imd_cbmem: Remove indirection through cbmem_get_imd()
+pick a854c9d787 nb/intel/x4x: Factor out hiding PCI devs in pure fn
+pick eef7c69d49 superio/nct5539d: include the missing acpi.h and ssdt.h
+pick 92542469e2 src/superio: Remove unused include <stdlib.h>
+drop a8582c4c02 lib/cbmem_console: Rename cbmem_console_p to current_console
+pick ae64f22e8d drivers/usb/ehci_debug: Add x86_64 support
+pick c9b13594eb src/: Remove g_ prefixes and _g suffixes from variables
+pick fdcc9ab317 src/soc/intel: Add Cometlake-S and CMP-H skus
+pick cc3e2a031a src/mb/intel/coffeelake_rvp: Rename COMETLAKE_RVP to COMETLAKE_RVPU
+pick 12507ce895 mb/google/poppy: add VBTs for remaining variants
+pick d7e92e8958 mb/google/rammus: add libgfxinit support
+pick 2d086e6971 mb/google/glados: restore device-specific VBTs
+pick 5736846581 superio/aspeed: Remove unused aspeed include path
+pick bd36ea9866 soc/intel/tigerlake: Change compilation based on TIGERLAKE_BASE
+pick b7f30ad25f mb/google/hatch/variants/helios: DPTF solution update
+pick e58eafc45a soc/intel/cannonlake: Fix compilation
+pick ab62d940fe configs: Jenkins buildtest for FSP_CAR
+pick 1804b15896 soc/amd/common: Inline ACPI MMIO accessors
+pick 2d54fc9581 mb/google/poppy: Declare output GPIOs as pull-downs
+pick ecfb4b81ae mb/google/poppy: Power on PMIC before accessing its opregion
+pick c0b9c8cbc0 mb/google/poppy: Rework OV5670 power on sequence
+pick be0dfef30c mb/google/poppy: Rework OV13858 power on sequence
+pick 68f0eb5269 mb/google/poppy: Remove redundant mutex
+pick 00517b687a mb/google/poppy: Remove useless ifs around voltage and GPIO direction configuration
+pick 2317b4f114 sb/amd/cimx: replace cimx_util with common ACPIMMIO AMD block
+pick a2962daf6f security/vboot: Remove struct vboot_working_data
+pick 63b9700b2c lib/coreboot_table: Add CBMEM_ID_VBOOT_WORKBUF pointer to coreboot table
+pick b9aaa33722 mb/intel/icelake_rvp: Remove unused mainboard ACPI write table
+pick 68ec3eb1f0 src: Move 'static' to the beginning of declaration
+pick c135b829e7 drivers/gfx: Add generic graphics with SSDT generator
+pick f9fa985242 soc/intel: Intel graphics driver scans generic bus
+pick 6f8f34f1bf soc/intel/cannonlake: Add gfx.asl file
+pick c650e130ce ec/google/wilco: Add EC ACPI methods for privacy screen
+pick c487ac1a9f mb/g/drallion: Enable privacy screen on Drallion variant
+pick f824378526 AGESA,binaryPI: Remove unused s3_load/save_nvram
+pick 5cdbce8072 AGESA boards: Drop commented out code
+pick 08c8cf9586 soc/intel/common/cse: Update comment for post-CAR global world
+pick a37eef131a soc/nvidia/tegra: Constify variable
+pick 91e7fe7b54 soc/amd/stoneyridge: Use USE_AMD_BLOBS to remove default paths
+pick 73b1bd7992 soc/intel/cannonlake: Configure GPIO PM configuration in bootblock
+pick 54daaecacb mb/google/drallion: Disable GPIO dynamic PM configuration
+pick 70a03dd960 src: Add missing include <stdlib.h>
+pick d14673f0b1 hatch: Create stryke variant
+drop 5e4c663a5a lib/imd_cbmem: Eliminate unnecessary NULL check
+drop 596947ccf7 lib/imd_cbmem: Remove the indirections that hide imd_cbmem
+drop b6161be9de lib/imd_cbmem: Rename imd_cbmem into imd, use directly
+pick c08fdf3dec binaryPI: Fix failing AP startup
+pick 73a544d453 soc/amd/common/block/acpimmio: fix ACPIMMIO decode enable function
+pick f65c1e4088 amdblocks/acpimmio: Unify BIOSRAM usage
+pick 5a6620277d amdblocks/acpimmio: add common functions for AP entry
+pick 6b9cff49b0 AGESA: Reduce S3_DATA_SIZE
+pick 2f35744e40 mb/google/hatch/var/akemi: tune DPTF for Akemi
+pick d9105d98b7 mb/google/kohaku: Adjust I2C clock frequency
+pick afd687f71f mb/google/drallion/variants/drallion: Adjust all I2C CLK to meet spec
+pick 41fe62b6dc mb/google/octopus: Create Lick variant
+pick 1c37157218 mmio: Add clrsetbitsXX() API in place of updateX()
+pick 55009af42c Change all clrsetbits_leXX() to clrsetbitsXX()
+pick 8cee45c3f8 sb/amd/{agesa,pi}/hudson: add southbridge C bootblock initialization
+pick 08cd65198e sb/amd/cimx/sb800: add C bootblock southbridge initialization
+pick 0e03aa2c6f sc7180: Add clock driver
+pick b1ea707bda Revert "mb/google/hatch: Enable PchPmSlpS0Vm075VSupport for hatch"
+pick 2f50d7cd3b mb/asrock/h110m: disable CLKREQ to use onboard LAN
+pick 9a669b1c68 superio/{aspeed,nuvoton}: Fix typo
+pick b21999cbed superio/ite/it8528e: Fix typo
+pick 36c6f95602 superio/smsc/lpc47n2{17,27}: Fix typo
+pick e46a41542b superio/serverengines/pilot: Fix typo
+pick 7e51f15129 superio/fintek/f81866d: capitalize 'TODO'
+pick 634c783d1f sc7180: Add SPI-NOR support
+pick 6bbf8f238f sc7180: Add AOP firmware support
+pick 050be72e77 sc7180: Add USB support
+pick 655220ae69 trogdor: Add mainboard USB support
+pick 31a5ff5e36 trogdor: libpayload USB support
+pick bb345abbfc arm64: Correctly unmask asynchronous SError interrupts
+pick 2e0bca011a arm64: Bump exception stack size to 2KB
+pick 51359d6c84 arm64: Print a char to UART early in exception handler
+pick 53486a0be0 mb/intel/icelake_rvp: Remove nested variant header references
+pick 68b6eb78d2 soc/intel/braswell: Use common sb code for SPI lockdown configuration
+pick b9d5b26458 soc/qualcomm/sc7180: Adapt to recent API changes
+pick 344b331783 mb/intel/coffeelake_rvp: Switch to overridetree setup
+pick fcd8c9e99e hatch: Fix FPMCU pwr/rst gpio handling
+pick 1debc0c101 vboot: update VbExNvStorageWrite function
+pick 683657e93a vboot: Clear secdata change flags after factory init
+pick d3f2a1e4a9 superio/fintek: Fix typo
+pick 5cf4d0c148 src/superio/via: Remove unused superio chips
+pick 462738299b superio/nsc/pc87417: Remove unused <stdint.h>
+pick 6fdf122fc3 superio/smsc/lpc47n207: Remove unused <stdint.h>
+pick 879ea7fce8 endian: Replace explicit byte swapping with compiler builtin
+pick 8cb5ea7879 nb/i945: Fix typo
+pick 934ae21b52 mb/emulation/qemu-riscv: Implement ipi using clint to enable smp in qemu/spike.
+drop 05fe16c4f3 console,monotonic_timer: Avoid calls from APs
+pick 2ab4f4b2c5 soc/intel/skylake: Add option to control microcode update inclusion
+pick cbc878d2a2 drivers/intel/fsp2_0: Add logo support
+pick 7c04acff8a mb/facebook/monolith: Add Facebook Monolith
+pick 4ba70a7575 src: Add Facebook Monolith to maintainers
+pick 67910db907 arch|cpu/x86: Add Kconfig option for x86 reset vector
+pick 2ee6fbf0d7 mb/lenovo/t520/devicetree: Use subsystemid inheritance
+pick a0c97590b9 mb/lenovo/w520/devicetree: Use subsystemid inheritance
+pick 9f56eeda41 src/superio: Remove unused intel's superio chips
+pick dafc78bb8d mb/asus/am1i-a: Remove defined and not used ITE_CONFIG_REG_CC
+pick 657d68bddc AGESA,binaryPI: Move PORT80 selection to C bootblock
+pick 0bb644754d mb/google/poppy: set detachable system type for nocturne/soraka
+pick 57aa8e37dc mb/intel/kblrvp: Remove hex values from VR settings
+pick 14dd073e80 EC sync: Properly handle VBERROR return codes from vb2api_ec_sync
+pick 1bb330348d Documentation: Remove redundant 'documentation'
+pick edcce07531 Documentation: Move ACPI documentation in a subindex
+pick 3b34db6c0f mb/google/octopus: Create Foob variant
+pick 96e2a5da34 soc/intel/bsw/gpio: Factor out GPI macros
+pick 0b82b3d6fd 3rdparts/fsp: Update fsp submodule
+pick 808f5c3849 drivers/intel/fsp2_0: Allow to add FSP binaries from repo for IceLake
+pick c79efa822d util/lint: Update spelling.txt to latest linux version
+pick aeff512a50 src/device: Fix typo
+pick 322635a955 mb/gigabyte/ga-b75m-d3h: Add ga-b75-d3v as a variant
+pick f15f310ea4 mb/lenovo/t420/devicetree: Use subsystemid inheritance
+pick 5ee7e472d1 mb/lenovo/t420s/devicetree: Use subsystemid inheritance
+pick 7e128576c2 mb/lenovo/l520/devicetree: Use subsystemid inheritance
+pick 289b7d65fc mb/lenovo/x220/devicetree: Use subsystemid inheritance
+pick bbb00d7404 mb/lenovo/x230/devicetree: Use subsystemid inheritance
+pick 07b2fdb594 mb/lenovo/t430/devicetree: Use subsystemid inheritance
+pick b8b9786ad4 mb/lenovo/t430s/devicetree: Use subsystemid inheritance
+pick abb0ebbb51 mb/lenovo/s230u/devicetree: Use subsystemid inheritance
+pick d01b675067 mb/lenovo/w530/devicetree: Use subsystemid inheritance
+pick 3979def529 payloads/bayou: remove unhooked payload
+pick 4841203c3a binaryPI boards: Bulk remove BINARYPI_LEGACY_WRAPPER remains
+drop d83bd535be Kconfig: Drop NO_RELOCATABLE_RAMSTAGE
+pick 19b963ce86 include/device/pci_ids: Add Coffeelake U IGD P630
+pick e86ded841f Documentation: Describe how to deal with snooping https proxies
+pick 13746076e9 mainboard/(i945,ich7): Remove commented RCBA32(0x341c) code
+pick 0a2de7b538 mb/google/kohaku: Update TCC offset setting
+pick a244d5edd4 sb/amd/{agesa,pi}/hudson: Explicitly enable LPC controller
+pick 200d213d1b amdblocks/pci: add common implementation of MMCONF enabling
+pick 263f129a8e soc/intel/common: Add Jasperlake Device IDs
+pick 18aa6fe261 mb/{facebook/portwell}: Remove ITE8258_CMD_PORT
+pick 9e052c2b6c vboot: remove old vboot_fill_handoff function header
+pick 12520134f1 mb/google/daisy: Move 'PMIC_BUS' to Kconfig
+pick 9484792ad1 mb/google/drallion/variants/drallion: Update thermal configuration for DPTF
+pick 8d98d80e53 mb/portwell/m107/devicetree.cb: Use IGD_MEMSIZE_32MB
+pick c8e1c0d395 mb/facebook/fbg1701/acpi/ec.asl: Remove header
+pick c1c5354e45 mb/{facebook/portwell}: Define SDCARD_CD in dsdt.asl
+pick 106abb82fe mb/portwell/m107/acpi/superio.asl: Correct indent
+pick 42174235ba mb/goog/hatch/var/dratini: Tune i2c frequency to 400 KHz
+pick a7ddf4cdb0 mb/portwell/m107/fadt.c Use get_apic_table_revision
+pick ddb4b0d576 soc/intel/Kconfig: Load Tiger Lake SOC Kconfig
+pick e0cdaf0b19 soc/intel/tigerlake: add soc implementation for ETR address API
+pick 86da00db89 soc/intel/tigerlake: Include soc common lpss header file
+pick 540a98001d printf: Automatically prefix %p with 0x
+pick ba8d8f2583 drivers/i2c/rt5663/: fix missing header include
+pick e4951055dd mb/**/hda_verb.c: use denary numerals for lengths
+pick fd6fb289ce vc/amd/pi: Allow 00670F00 to build with no binaryPI
+pick 7987c1cb6f soc/amd/stoneyridge|vc: Change default locations for blobs
+pick e1988f5e0a soc/amd/stoneyridge|mb: Add Kconfig symbol for Prairie Falcon
+pick 6851922f08 soc/amd/stoneyridge|mbs: Define SOC_AMD_STONEYRIDGE symbol
+pick d786843ca6 soc/amd/stoneyridge|mbs: Deprecate SOC_AMD_NAME_PKG and others
+pick ad27283a3c mb/amd/padmelon: Use Prairie Falcon configuration
+pick 8245bd25a3 fmap: Make FMAP_CACHE mandatory if it is configured in
+pick 07e6098d48 mb/facebook/fbg1701: Move verified items to board_verified_boot.h
+pick e2291f5ad4 mb/{facebook/portwell}: Remove empty onboard.h
+pick e18dba8e9a mb/lenovo/t410: Select ricoh driver
+pick 6cfda93c6c Documentation: Fix table and layout
+pick b643d3df8a libpayload/drivers/i8042: Add AT translated Keyboard support
+pick 1b12b64dab AGESA, binaryPI: implement C bootblock
+pick 5ee8283250 pcengines/apu2: Switch away from ROMCC_BOOTBLOCK
+pick a73317e5cf Documentation: enable ditaa integration
+pick b9edd8be67 asrock/imb-a180: Switch away from ROMCC_BOOTBLOCK
+pick cc6100f2d9 lenovo/g505s: Switch away from ROMCC_BOOTBLOCK
+pick 3c73dadd6f hp/pavilion_m6_1035dx: Switch away from ROMCC_BOOTBLOCK
+pick 199f98bc43 superio/common/generic: Assign resources behind device
+pick f1a4ae0a48 drivers/aspeed/common: Add support for high resolution framebuffer
+pick 9fe3d692c7 drivers/aspeed: Add AST2500 support
+pick 32bae49435 acpigen: Add methods for mutex operations
+pick 149d523c9a util/hatch: remove GBB_HWID, clean up user-visible output
+pick a6eab80dc9 soc/intel/{cnl,icl,skl,tgl}: Remove unused gpe0_en_* from chip.h
+pick 9a0f093343 Documentation: Fix EC type for facebook and portwell boards
+pick 3012948b39 mb/**/hda_verb.c: Clean up formatting
+pick 4240e32980 mb/google/hatch: Add new SKU ID 3 and 4
+pick 83b2740ba7 soc/mediatek/mt8183: skip fast calibration for high frequency of TX RX window
+pick 2cd02610ee mb/google/hatch/variant/akemi: Increase Goodix touch screen reset delay time
+pick 442fb05acf nb/{haswell,i945,sandybridge}: Drop outdated comment
+pick e077cdbc62 AGESA, binaryPI: Remove generic device for SPD eeproms
+pick 86867dd707 mb/google/nocturne: adjust VBT boot resolution
+pick a1d668efe9 vc/amd/pi: Fix typo
+pick 928511add1 vboot: update secdata naming scheme
+pick 3833f0ffdb cbfstool: Bump C version to C11
+pick 24f0455016 libpayload/drivers/i8042: Remove obsolete flag
+pick 3d5e1e5d52 sb/amd/cimx/sb800: Postpone Sb_Poweron_Init() call
+pick bc979cc904 pcengines/apu1: Switch away from ROMCC_BOOTBLOCK
+pick 6a5c61583b gizmosphere/gizmo: Switch away from ROMCC_BOOTBLOCK
+pick 8a2204896a 3rdparty/fsp: Set back commit to working version of the FSP
+pick 98b72dadf0 superio/*: Don't use conf_mode directly
+pick d1613f5681 libpayload/drivers/i8042: Add error handling
+pick 12a651c060 soc/intel/common: Add PCI device IDs for CMP-H
+pick 8b4528aae5 payloads/seabios: Update stable from 1.12.1 to 1.13.0
+pick 5232eb1a10 Doc/mb/gigabyte/ga-h61m-s2pv: Correct IFD section
+pick 9b7c232924 Update vboot submodule to upstream master
+pick f8e1764bb9 security/vboot: Ensure firmware body size is respected again
+pick 91c47c0dea asrock/e350m1: Switch away from ROMCC_BOOTBLOCK
+pick de64078102 bootblock: Provide some common prototypes
+pick b17a0f592c sb/intel/*: Remove romcc guards
+pick 9efc7fc540 Revert "crossgcc: Upgrade acpica to version 20191018"
+pick 7176a54c2b Revert "{northbridge,soc,southbridge}: Don't use both of _ADR and _HID"
+pick 1a5c3bb7fa mainboard/google/puff: Toggle on DqPinsInterleaved
+pick ebcd0a8d8d mb/roda/rk886ex: Don't rewrite pnp_{enter,exit}_conf_state function
+pick 50b82ef2bb mb/msi/ms7721: Don't rewrite pnp_{enter,exit}_conf_state function
+pick 9f4c4856f3 asus/f2a85-m: switch away from ROMCC_BOOTBLOCK
+pick d912df22a8 drivers/mrc_cache: Redo indenting
+pick b320bc5e0e AGESA: Disable boards from build
+pick b7eb1097e5 mb/g/drallion: Remove Wilco 1.0 CML variants from drallion code
+pick 8d9262a7e7 soc/intel/tigerlake: Pick correct pmc base reg from pch type
+pick 40bb6c340f mb/facebook/monolith/gpio.h: Update GPIO configuration
+pick f17396591f mb/facebook/monolith: Remove % tag from fmd file
+pick 2f99897d00 mb/facebook/monolith: Add vboot-ro.fmd to support measured boot
+pick ed06e11900 Documentation: Extend release checklist (list to-be deprecated boards)
+pick 98579a9e86 soc/intel/common/block/chip/Kconfig: Fix minor whitespace
+pick ece88ab765 sc7180: clock: Add support for QUP DFSR configuration
+pick 80759b0dbd drivers/intel/fsp1_1: Drop unused function
+pick b86e96ab8c arch/x86: Make X86 stages select ARCH_X86
+pick bf15b2f7c3 3rdparty/fsp: Update to current master again
+pick 45d05d0823 ec/google/chromeec/acpi: move PS2K under PCI0
+pick 591dbfe295 util/cbfstool: Further reduce warnings for lz4 code
+pick 658ae3eb29 mb/google/auron: add VBTs for variants
+pick ac247b64e8 mb/google/slippy: Update VBT file
+pick 5a365cb8ef mb/google/beltino: Add VBTs for all variants
+pick c32ca089c9 superio/ite: remove unused stdint.h include from header files
+pick 41956b5742 libpayload: Implement reading from CBMEM console
+pick 9db39879a8 soc/amd,{agesa,pi}/hudson: Have do_board_reset in all stages
+pick bbe66e4555 superio/ite/it8728f: remove unused LDN selection register define
+pick bf14c0050c soc/intel/tigerlake: Add FSP header and Fsp.fd file path for Jasper Lake
+pick 03f78b069d vendorcode/intel/fsp: Add Jasper Lake FSP headers for FSP v1433
+pick 116a837818 mb: Use fixed value in RcompTarget structure
+pick 7b7bc59f20 device/pnp: introduce and use PNP_SKIP_FUNCTION
+pick 9c6e9c684f device/pnp: use correct width type for pnp_info.function
+pick fc749b23ef biostar/am1ml: Switch away from ROMCC_BOOTBLOCK
+pick b4a68a5a28 src/soc/intel/cannonlake: Bump MAX_CPU from 8->12
+pick c7305f7b37 mb/google/jecht: Add VBTs for all variants
+pick 021462bb26 mb/google/rambi: add VBTs for variants
+pick a4e9395979 superio/aspeed/ast2400: Add AST2500 support
+pick 50a4454892 src/mb/Kconfig: add BOARD_ROMSIZE_KB_5120
+pick 9cb88a70f7 src: Conditionally include TEVT
+pick d908916642 soc/intel{cannonlake,icelake}/northbridge.asl: Correct flash range
+pick 31e2188c38 ifwitool: Introduce a use the Second Logical Boot Partition option
+pick 0f9858f5a1 soc/intel/apollolake: add support for extracting LBP2 from IFWI
+pick b5ba8b6d1a mb/intel/icelake_rvp: Remove baseboard gpio configuration support
+pick ee8f969e1e mb/msi/ms7721: Switch away from ROMCC_BOOTBLOCK
+pick 542919f370 drivers/analogix: Add anx7625 MIPI DSI/DPI to DP bridge driver
+pick f4b9ec6784 soc/intel/skylake: Add irq 11 to the LNK* _PRS
+pick 555efe4792 soc/intel/skylake: Change SA_PCIEX_LENGTH to 256MB
+pick 9612a3c32a cpu/intel: Remove ROMCC header guards and code
+pick 7a1b60b694 mb/emulation/qemu-q35: Drop unused romcc-related Kconfig
+pick 297b6b862a include/cpu/x86: Add STM Support
+pick 413a742ad9 vboot: Fix MOCK_SECDATA for new naming scheme
+pick 26060bc7c8 configs: add config.google_kevin_secdata_mock
+pick 85d44f4a5e vboot: remove 2lib headers from Makefile
+pick f0b79daeba src: Remove unused 'include <pc80/mc146818rtc.h>'
+pick eb34d8bf18 src: Remove unused 'include <bootblock_common.h>'
+pick 1a8dbfc899 cpu/x86/mp_init: Fix typo
+pick 6dc2fda469 Revert "include/cpu/x86: Add STM Support"
+pick 025cb700a1 vendorcode/cavium/bdk/libbdk-hal: Add missing <stdlib.h>
+pick c184e65ed9 vendorcode/cavium/bdk/libbdk-hal/device: Add missing <stdlib.h>
+pick 3917904878 vendorcode/cavium/bdk/libbdk-hal/bdk-qlm.c: Add missing <stdlib.h>
+pick 4f66cb9b28 src: Add missing include <types.h>
+drop 1cb9cd5798 Drop ROMCC code and header guards
+drop 494b031eb7 arch/x86: Drop uses of ROMCC_BOOTBLOCK
+
+pick add0b4712d src: Remove unused 'include <halt.h>'
+pick 3c24a40d53 src: Remove unneeded 'include <delay.h>'
+pick c00d46353c src: Remove unused include <device/smbus_def.h>
+pick 43d5f7e8ea src/soc/rockchip: Remove unused <stdlib.h>
+pick 8eeff1e0f4 src/soc/nvidia: Remove unused <stdlib.h>
+pick cbea47c744 src/soc/qualcomm: Remove unused <stdlib.h>
+pick 3f870446a6 src/arch/arm: Remove unused 'include <stdint.h>'
+pick 20a329718e mb/biostar: Remove unused <stdlib.h>
+pick 98b0ae6561 mb/{gizmosphere,google}: Remove unused <stdlib.h>
+pick 45f05a13ed mb/{hp,intel}: Remove unused <stdlib.h>
+pick 7104cdb375 mb/{cavium,opencellular,roda,scaleway,ti}: Remove unused <stdlib.h>
+pick b85fe66e39 mb/{asrock,asus}: Remove unused <stdlib.h>
+pick 4540a990a5 src/mainboard/amd: Remove unused <stdlib.h>
+pick e5476db4aa mb/{msi,pcengines}: Remove unused <stdlib.h>
+pick aa57187f82 mb/*/*/early_init.c: Remove unused <device/pci_{def,ops}.h>
+pick 4b463c71c0 mb/*/{BiosCallOuts,mainboard,romstage}.c: Remove unused <device/pci_{def,ops}.h>
+pick 88f107012a soc/qualcomm/sdm845: Remove unused 'include <timestamp.h>'
+exec git cherry-pick b46f430665e1d3f79feea474879bd012068a17ff # smp/node.h in kfsne4-dre
+pick dda17fa222 src: Use '#include <smp/node.h>' when appropriate
+pick 94b503094f src/security: Remove unused <stdlib.h>
+pick b12c2761f4 src/{drivers,device,ec}: Remove unused <stdlib.h>
+pick dc987fecce src/northbridge: Remove unused <stdlib.h>
+pick 38d2540674 src/southbridge: Remove unused <stdlib.h>
+pick 8cf28dbf93 soc/{amd,cavium,mediatek,sifive}: Remove unused <stdlib.h>
+pick d51ee90f12 src/soc/samsung: Remove unused <stdlib.h>
+pick 608fbf8110 src/soc/intel: Remove unused <stdlib.h>
+pick 0420e50b6b src/arch: Remove unused <stdlib.h>
+pick 88f5c7178e src: Remove unused 'include <arch/cpu.h>'
+pick 9a5fc849fd mb/lenovo/g505s: Remove unused <stdlib.h>
+pick bd3037bfa7 mainboard/google/puff: enable emmc
+pick f82fa746bf mb/google/hatch: Add mushu variant
+pick 629abbe751 mb/google/drallion: Remove Wilco 1.0 CML code from drallion code
+pick 25eb1b3149 mb/google/drallion: Clean up unused weak function
+pick 3280b76729 storage/mmc: Fix wrong frequency setting for HS speed mode
+pick b9e8448384 drivers/ipmi: Add IPMI Read FRU function
+pick 1e83e5c61a src/arch/x86: Build mainboard acpi_tables source if present
+pick 53490444f7 soc/intel/tigerlake: Add required header files in pch.c
+pick d1371508f5 {drivers,soc}/intel/fsp2_0: Move chipset specific logo handling to SoC
+pick f863176423 mb/facebook/fbg1701: Correct typo in hda verbs
+pick bba4ec4ca1 superio/smsc/lpc47m10x: Expose pnp_enter/exit_conf_state
+pick a87a741b41 crossgcc: Upgrade Python to version 3.8.1
+pick 727ac0d263 AMD {SoC, AGESA, binaryPI}: Don't use both of _ADR and _HID
+pick 9ac409c7e5 mb/google/hatch/var/jinlon: Config WWAN_RESET
+pick 6de7ecb585 mb/google/hatch/var/kindred: Decrease i2c frequency below 400 KHz
+pick 6ee5559d6a soc/mediatek/mt8183: Use DDR clock to compute Tx delay cell
+pick e9b1e0fe88 soc/intel/tigerlake: Update FSP stack and heap size
+pick cdf6f3a4ba security/vboot: Add a dedicated flag for building of vboot library
+pick ed69de318f mainboard: Add missing include <device/pci_def.h>
+pick b9bd69e70e src/mainboard: Remove unused '#include <device/pci.h>'
+
+# merge
+drop 520717dff196e1d1ed61f72a8abadbc114ee6ba1 AGESA,binaryPI: Drop remains of ROMCC_BOOTBLOCK
+exec git cherry-pick 424178fcff96c4e962084c67445bed6223b6f596 # AGESA,binaryPI: Drop remains of ROMCC_BOOTBLOCK
+
+pick b915faedd5 sb/amd/{agesa,pi}/hudson: Use simple PCI config accessor
+pick 282717e5cc sb/amd/{agesa,pi,cimx}/bootblock: Use simple PCI config accessor
+pick 0142d441c6 mb/**/dsdt.asl: Remove "Some generic macros" comment
+pick 7db16ddc88 superio/common/conf_mode: Add op to write SSDT
+pick 95bff2e17e superio/common: Add more ACPI methods
+
+# merge
+drop e8b7ff1ab5 mainboard/google/puff: Enable func0 of 1c for nic
+exec git cherry-pick d9900292d94d80df65610bf41bf23d7a91b69bd6 # mainboard/google/puff: Enable func0 of 1c for nic
+
+pick 295fdbef39 mainboard/google/puff: Configure HDA registers
+pick b417786525 mainboard/google/hatch: Remove MAX98357A assumption from baseboard
+pick 028570b445 vendorcode/amd/pi/Kconfig: Add prompt to pre/post pi files
+pick 60889e55ea mainboard/variant/puff: set PL values for puff
+pick c4a3f51618 mainboard/google/hatch: Move gpio GPP_A* NC down into baseboard
+pick 3dbe593906 mainboard/google/hatch: Move gpio GPP_C* NC down into baseboard
+pick c735a31861 mainboard/google/hatch: Move gpio GPP_H3 config up from baseboard
+pick 7899cd9088 mb/google/hatch/variant/kohaku: Fix Kohaku baseboard/gpio.c mux comments
+pick d33b02e7f3 mainboard/google/puff: Add GPIO configuration
+pick b824f7dbae soc/intel/skylake/vr_config: Use lookup table by default
+pick 7a70a46ecc mb/supermicro/x11-lga1151-series: Remove default devicetree values
+pick 2bdc05d89b asus/am1i-a: Switch away from ROMCC_BOOTBLOCK
+
+# merge
+drop e6b313da36 cpu/intel/car/p4-netburst: Add assert for SIPI_VECTOR_IN_ROM
+exec git cherry-pick 9d8b903876f98a16f46a0a21b3ec96eb1f31ba2f # Add assert for SIPI_VECTOR_IN_ROM
+
+pick b73111cfa7 soc/amd/common/car: Remove unneeded header
+pick e69798b5ae util/pgtblgen: Fix qemu on KVM
+pick 5dd4bf3644 mb/gigabyte/ga-b75m-d3h: enable superspeed ports for all variants
+pick 1f7a11699a mb/google/octopus/variants/garg: update new SKU
+pick f814ff15f9 mb/google/hatch/var/jinlon: Update DPTF parameters
+pick f96c638a60 vendorcode/intel/fsp/fsp2_0/tgl: Add FSP header files for Tiger Lake
+pick 5395123b84 soc/intel/skylake: Rename pch_init() code
+pick 33ff4cc137 soc/intel/cannonlake: Refactor pch_early_init() code
+pick e150876910 soc/intel/cannonlake: Clean up report_cpu_info() function
+pick a8a7374e84 hatch: Fix FPMCU pwr/rst gpio handling for dratini/jinlon
+pick 4200a52263 src: Remove unused include <string.h>
+pick 0405109eed mb/google/eve: Update and fix VBT
+pick 34f52dd0ad mb/google/kefka: Add missing SPD
+pick 66406d4754 mb/google/eve: select SYSTEM_TYPE_CONVERTIBLE
+pick 58ececfb28 Doc/releases/checklist.md: Correct some inconsistencies
+pick da6170a223 mb/google/hatch/akemi: Set touchpad data hold time more than 300ns
+pick cca7486120 soc/amd/picasso: Configure APOB NV only with ACPI resume
+pick f9ad22d9f7 src/x86|cpu/intel: Hardcode FIT and ID
+pick 92b0e8dcae drivers/generic/cbfs-serial: Add driver to read serial from CBFS
+pick d28b74ce6a Doc/index.md: Fix a typo
+pick 93b343a779 Doc/tutorial/part1.md: Fix minor formatting issues
+pick a8ab2b33a4 Doc/tutorial/part2.md: Align headings with part1.md
+pick 086f0faf75 soc/intel/cannonlake: Move GPIO PM configuration to soc level
+pick 325fd3462e mb/google/octopus: Add two new sku IDs for foob
+pick b091b33c2a mb/google/octopus/variants/bobba: fix LTE power sequence and move get_board_sku to smm stage.
+pick d4f39abebf mb/google/octopus/variants/dood: support LTE module
+pick f107b6c3a0 mb/google/hatch: Clean up duplicate method
+pick eafa2035ce soc/broadwell/minihd: correct vendor, subsystem IDs
+pick b5b8a7d540 nb/haswell/minihd: correct subsystem ID
+pick 7abc037da4 util/superiotool: alter Makefile to build the binary on FreeBSD
+pick 2ad6f8138a mb/*/*/early_init.c: Remove defined but not used macro
+drop d6de92ef1e src/include: Remove min/max() from <stdlib.h>
+pick f07d7dc2fd drivers/ipmi/ipmi_fru: Add missing <stdlib.h>
+pick 0d9fb55ae2 ec/google: Fix wedging AP on early ec sw sync
+pick 12b1d7df70 mb/google/hatch/var/dratini: Add a new sku for dragonair
+
+# Rebase ad983eeec7..8601afb679 onto 1b8df77ac1 (190 commands)
+#
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup <commit> = like "squash", but discard this commit's log message
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+# .       create a merge commit using the original merge commit's
+# .       message (or the oneline, if no original merge commit was
+# .       specified). Use -c <commit> to reword the commit message.
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+
+EOF
