@@ -18,6 +18,10 @@ config BOARD_SPECIFIC_OPTIONS
 	select SYSTEM_TYPE_SERVER
 	select DRIVERS_I2C_W83793
 
+config MEMLAYOUT_LD_FILE
+	string
+	default "src/mainboard/asus/kfsn4-dre/memlayout.ld"
+
 config MAINBOARD_DIR
 	string
 	default "asus/kfsn4-dre"
