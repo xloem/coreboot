@@ -1,6 +1,8 @@
 ifeq ($(CONFIG_SOUTHBRIDGE_NVIDIA_CK804),y)
 
 bootblock-y += bootblock.c
+bootblock-y += romstrap.ld
+bootblock-y += romstrap.S
 
 romstage-y += early_setup.c
 romstage-y += early_smbus.c
